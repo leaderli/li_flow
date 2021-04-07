@@ -1,0 +1,11 @@
+package com.leaderli.li.flow.editor.model;
+
+public enum ModelFieldEnum {
+
+	FLOW_NODE_NAME,
+	FLOW_NODE_FLOW_NAME,
+	FLOW_NODE_GOTO_NODES,
+	FLOW_NODE_POINT,
+	GOTO_NODE_CONNECTION_SOURCE,
+	FLOW_NODE_CONNECTION_TARGET;
+}

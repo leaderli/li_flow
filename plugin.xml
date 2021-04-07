@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="com.leaderli.li.flow.category"
+            name="li flow">
+      </category>
+      <wizard
+            category="com.leaderli.li.flow.category"
+            class="com.leaderli.li.flow.wizard.CreateFlowWizard"
+            icon="icon/flow.gif"
+            id="com.leaderli.li.flow.createFlowWizard"
+            name="flow">
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+          class="com.leaderli.li.flow.editor.CallFlowEditor"
+            contributorClass="com.leaderli.li.flow.editor.CallFlowEditorContributor"
+            
+            default="true"
+            extensions="li"
+            icon="icon/flow.gif"
+            id="com.leaderli.li.flow.flowEditor"
+            name="flow editor">
+      </editor>
+   </extension>
+
+</plugin>
