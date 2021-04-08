@@ -1,5 +1,7 @@
 package com.leaderli.li.flow.adapter;
 
+import com.leaderli.li.flow.editor.model.ModelRole;
+
 public interface Notify {
 
 
@@ -10,8 +12,8 @@ public interface Notify {
 		return true;
 	}
 
-	default boolean canNotifyForTypeAndRole(int typeRole) {
-		return true;
+	default int typeAndRole() {
+		return ModelRole.ALL_TYPE | ModelRole.ALL_ROLE;
 	}
 
 

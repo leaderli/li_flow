@@ -13,7 +13,6 @@ import com.leaderli.li.flow.adapter.Notify;
 import com.leaderli.li.flow.constant.PluginConstant;
 import com.leaderli.li.flow.editor.model.FlowDiagram;
 import com.leaderli.li.flow.editor.model.GotoNode;
-import com.leaderli.li.flow.editor.model.ModelFieldEnum;
 import com.leaderli.li.flow.util.GsonUtil;
 
 public class SubflowReturnFlowNodeEditPart extends FlowNodeEditPart {

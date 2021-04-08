@@ -13,7 +13,7 @@ public class GotoNode extends Node<FlowNode>{
 
 	public void setLinkedConnectionNode(int linkedConnectionNode) {
 		this.linkedConnectionNode = linkedConnectionNode;
-		this.notifyChanged();
+		this.notifyChanged(CONNECTION_SOURCE_ROLE);
 	}
 
 	public String getName() {
@@ -22,6 +22,7 @@ public class GotoNode extends Node<FlowNode>{
 
 	public void setName(String name) {
 		this.name = name;
+		this.notifyChanged(NAME_ROLE);
 	}
 	
 	

@@ -1,8 +1,8 @@
 package com.leaderli.li.flow.editor.part;
 
 import com.leaderli.li.flow.editor.policy.ServletFlowNodeOpenEditPolicy;
-import com.leaderli.li.flow.generate.GenerateMethod;
 import com.leaderli.li.flow.generate.GenerateFromTemplate.Builder;
+import com.leaderli.li.flow.generate.GenerateMethod;
 
 public class ServletFlowNodeEditPart extends FlowNodeEditPart {
 

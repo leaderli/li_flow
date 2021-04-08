@@ -5,8 +5,8 @@ import org.eclipse.gef.Request;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
 import com.leaderli.li.flow.editor.model.FlowNode;
-import com.leaderli.li.flow.generate.GenerateMethod;
 import com.leaderli.li.flow.generate.GenerateFromTemplate.Builder;
+import com.leaderli.li.flow.generate.GenerateMethod;
 import com.leaderli.li.flow.ui.ModelPropertyDescriptor;
 
 public class SubflowEntryFlowNodeEditPart extends FlowNodeEditPart {

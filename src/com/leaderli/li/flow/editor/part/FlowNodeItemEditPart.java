@@ -12,7 +12,6 @@ import org.eclipse.gef.EditPolicy;
 import com.leaderli.li.flow.adapter.Notify;
 import com.leaderli.li.flow.editor.model.FlowNode;
 import com.leaderli.li.flow.editor.model.GotoNode;
-import com.leaderli.li.flow.editor.model.ModelFieldEnum;
 import com.leaderli.li.flow.editor.policy.FlowNodeItemXYLayoutPolicy;
 
 public class FlowNodeItemEditPart extends GenericsEditPart<FlowNode> {

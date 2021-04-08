@@ -313,8 +313,8 @@ public class FlowNodeEditPart extends GenericsEditPart<FlowNode> implements Node
 		}
 
 		@Override
-		public boolean canNotifyForTypeAndRole(int typeRole) {
-			return ModelRole.isTypeRole(FLOW_TYPE | NAME_ROLE, typeRole);
+		public int typeAndRole() {
+			return FLOW_TYPE | NAME_ROLE;
 		}
 	}
 
@@ -327,8 +327,8 @@ public class FlowNodeEditPart extends GenericsEditPart<FlowNode> implements Node
 		}
 
 		@Override
-		public boolean canNotifyForTypeAndRole(int typeRole) {
-			return ModelRole.isTypeRole(FLOW_TYPE | POINT_ROLE, typeRole);
+		public int typeAndRole() {
+			return FLOW_TYPE | POINT_ROLE;
 		}
 	}
 
@@ -340,8 +340,8 @@ public class FlowNodeEditPart extends GenericsEditPart<FlowNode> implements Node
 		}
 
 		@Override
-		public boolean canNotifyForTypeAndRole(int typeRole) {
-			return ModelRole.isTypeRole(FLOW_TYPE | CONNECTION_TARGET_ROLE, typeRole);
+		public int typeAndRole() {
+			return FLOW_TYPE | CONNECTION_TARGET_ROLE;
 		}
 
 	}
@@ -361,8 +361,8 @@ public class FlowNodeEditPart extends GenericsEditPart<FlowNode> implements Node
 		}
 
 		@Override
-		public boolean canNotifyForTypeAndRole(int typeRole) {
-			return ModelRole.isTypeRole(FLOW_TYPE | CHILD_ROLE, typeRole);
+		public int typeAndRole() {
+			return FLOW_TYPE | CHILD_ROLE;
 		}
 
 	}

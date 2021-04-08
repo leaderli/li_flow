@@ -30,7 +30,7 @@ public class NodeNotify implements ModelRole {
 	}
 	public void notifyChanged(int typeRole, String oldVal, String newVal) {
 		notifys.stream()
-				.filter(notify -> notify.canNotifyForModel(this) && notify.canNotifyForTypeAndRole(typeRole))
+				.filter(notify -> notify.canNotifyForModel(this) && ModelRole.isTypeRole(notify.typeAndRole(), typeRole))
 				.forEach(notify -> {
 					notify.notifyChanged(typeRole, oldVal, newVal);
 				});

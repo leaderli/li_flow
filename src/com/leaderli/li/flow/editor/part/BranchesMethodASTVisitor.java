@@ -6,8 +6,8 @@ import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 
 import com.leaderli.li.flow.editor.model.FlowNode;
-import com.leaderli.li.flow.generate.GenerateMethod;
 import com.leaderli.li.flow.generate.GenerateFromTemplate;
+import com.leaderli.li.flow.generate.GenerateMethod;
 import com.leaderli.li.flow.util.ResourcesUtil;
 
 public class BranchesMethodASTVisitor extends ASTVisitor {

@@ -8,7 +8,6 @@ import org.eclipse.ui.views.properties.PropertyDescriptor;
 import com.leaderli.li.flow.adapter.Notify;
 import com.leaderli.li.flow.editor.model.FlowNode;
 import com.leaderli.li.flow.editor.model.GotoNode;
-import com.leaderli.li.flow.editor.model.ModelRole;
 import com.leaderli.li.flow.editor.policy.SubflowRefFlowNodeOpenEditPolicy;
 import com.leaderli.li.flow.generate.GenerateFromTemplate.Builder;
 import com.leaderli.li.flow.generate.GenerateMethod;
@@ -88,8 +87,8 @@ public class SubflowRefFlowNodeEditPart extends FlowNodeEditPart {
 		}
 
 		@Override
-		public boolean canNotifyForTypeAndRole(int typeRole) {
-			return ModelRole.isTypeRole(FLOW_TYPE | FLOW_NAME_ROLE, typeRole);
+		public int typeAndRole() {
+			return FLOW_TYPE | FLOW_NAME_ROLE;
 		}
 	}
 }

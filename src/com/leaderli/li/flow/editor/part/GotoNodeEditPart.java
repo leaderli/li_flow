@@ -17,6 +17,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
+import com.leaderli.li.flow.adapter.Notify;
 import com.leaderli.li.flow.constant.PluginConstant;
 import com.leaderli.li.flow.editor.model.ConnectionNode;
 import com.leaderli.li.flow.editor.model.GotoNode;
@@ -28,7 +29,7 @@ import com.leaderli.li.flow.util.ImageUtil;
 public class GotoNodeEditPart extends GenericsEditPart<GotoNode> implements NodeEditPart, ModelRole {
 
 	IFigure outputTerminal = null;
-	IFigure terminalLabel = null;
+	Label terminalLabel = null;
 
 	public IFigure getOutputTerminal() {
 		if (outputTerminal == null) {
@@ -37,7 +38,7 @@ public class GotoNodeEditPart extends GenericsEditPart<GotoNode> implements Node
 		return outputTerminal;
 	}
 
-	public IFigure getTerminalLabel() {
+	public Label getTerminalLabel() {
 		if (terminalLabel == null) {
 			terminalLabel = new Label(getModel().getName());
 		}
@@ -67,6 +68,7 @@ public class GotoNodeEditPart extends GenericsEditPart<GotoNode> implements Node
 			figure.setForegroundColor(new Color(Display.getDefault(), new RGB(0, 0, 0)));
 
 		}
+		getTerminalLabel().setText(getModel().getName());
 		super.refreshVisuals();
 	}
 
@@ -112,18 +114,33 @@ public class GotoNodeEditPart extends GenericsEditPart<GotoNode> implements Node
 		});
 	}
 
-//	private class ConnectionSourceGotoNodeAdapter implements Notify {
-//
-//		@Override
-//		public void notifyChanged(int typeRole, String oldVal, String newVal) {
-//			refreshSourceConnections();
-//		}
-//
-//		@Override
-//		public boolean canNotifyForTypeAndRole(int typeRole) {
-//			return ModelRole.isTypeRole(GOTO_TYPE | CONNECTION_SOURCE_ROLE, typeRole);
-//		}
-//
-//	}
+	private class ConnectionSourceGotoNodeAdapter implements Notify {
+
+		@Override
+		public void notifyChanged(int typeRole, String oldVal, String newVal) {
+			refreshVisuals();
+			refreshSourceConnections();
+		}
+
+		@Override
+		public int typeAndRole() {
+			return GOTO_TYPE | CONNECTION_SOURCE_ROLE;
+		}
+
+		private class RenameGotoNodeAdapter implements Notify {
+
+			@Override
+			public void notifyChanged(int typeRole, String oldVal, String newVal) {
+				refreshVisuals();
+			}
+
+			@Override
+			public int typeAndRole() {
+				return GOTO_TYPE | NAME_ROLE;
+			}
+
+		}
+
+	}
 
 }
