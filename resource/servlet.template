@@ -1,0 +1,21 @@
+$package
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.leaderli.li.flow.BaseServlet;
+import com.leaderli.li.flow.Session;
+
+public class $name implements BaseServlet{
+
+	public  void service(Session session) {
+		
+	}
+	
+	
+	public Map<String, String> getBranches(){
+
+$getBranches
+
+	}
+}

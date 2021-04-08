@@ -8,15 +8,16 @@ public class GotoNode extends Node<FlowNode>{
 	private String name;
 	
 	public int getLinkedConnectionNode() {
-		return this.linkedConnectionNode;
+		return linkedConnectionNode;
 	}
 
 	public void setLinkedConnectionNode(int linkedConnectionNode) {
 		this.linkedConnectionNode = linkedConnectionNode;
+		this.notifyChanged();
 	}
 
 	public String getName() {
-		return this.name;
+		return name;
 	}
 
 	public void setName(String name) {

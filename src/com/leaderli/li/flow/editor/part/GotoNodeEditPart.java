@@ -17,7 +17,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
-import com.leaderli.li.flow.adapter.Notify;
 import com.leaderli.li.flow.constant.PluginConstant;
 import com.leaderli.li.flow.editor.model.ConnectionNode;
 import com.leaderli.li.flow.editor.model.GotoNode;
@@ -113,18 +112,18 @@ public class GotoNodeEditPart extends GenericsEditPart<GotoNode> implements Node
 		});
 	}
 
-	private class ConnectionSourceGotoNodeAdapter implements Notify {
-
-		@Override
-		public void notifyChanged(int typeRole, String oldVal, String newVal) {
-			refreshSourceConnections();
-		}
-
-		@Override
-		public boolean canNotifyForTypeAndRole(int typeRole) {
-			return ModelRole.isTypeRole(GOTO_TYPE | CONNECTION_SOURCE_ROLE, typeRole);
-		}
-
-	}
+//	private class ConnectionSourceGotoNodeAdapter implements Notify {
+//
+//		@Override
+//		public void notifyChanged(int typeRole, String oldVal, String newVal) {
+//			refreshSourceConnections();
+//		}
+//
+//		@Override
+//		public boolean canNotifyForTypeAndRole(int typeRole) {
+//			return ModelRole.isTypeRole(GOTO_TYPE | CONNECTION_SOURCE_ROLE, typeRole);
+//		}
+//
+//	}
 
 }
