@@ -18,7 +18,7 @@ public class FlowDiagram extends NodeNotify {
 	private transient FlowEditor editor;
 
 	public String getPackageName() {
-		return this.packageName;
+		return packageName;
 	}
 
 	public void setPackageName(String packageName) {
@@ -26,7 +26,7 @@ public class FlowDiagram extends NodeNotify {
 	}
 
 	public int getNextNodeID() {
-		return this.nextNodeID;
+		return nextNodeID;
 	}
 
 	public void setNextNodeID(int nextNodeID) {
@@ -35,12 +35,12 @@ public class FlowDiagram extends NodeNotify {
 
 	//TODO 后续优化id持续增长的问题
 	public int spanningNextNodeID() {
-		return this.nextNodeID++;
+		return nextNodeID++;
 	}
 
 	public List<FlowNode> getFlowNodes() {
 
-		return this.flowNodes;
+		return flowNodes;
 	}
 
 	public void setFlowNodes(List<FlowNode> flowNodes) {
@@ -49,21 +49,21 @@ public class FlowDiagram extends NodeNotify {
 	}
 
 	public void addFlowNode(FlowNode flowNode) {
-		this.flowNodes.add(flowNode);
+		flowNodes.add(flowNode);
 		flowNode.setParent(this);
-		this.registerNode(flowNode);
+		registerNode(flowNode);
 		flowNode.getGotoNodes().forEach(this::registerNode);
 		this.notifyChanged();
 	}
 
 	public void removeFlowNode(FlowNode flowNode) {
-		this.flowNodes.remove(flowNode);
-		this.unRegisterNode(flowNode);
+		flowNodes.remove(flowNode);
+		unRegisterNode(flowNode);
 		this.notifyChanged();
 	}
 
 	public List<ConnectionNode> getConnectionNodes() {
-		return this.connectionNodes;
+		return connectionNodes;
 	}
 
 	public void setConnectionNodes(List<ConnectionNode> connectionNodes) {
@@ -72,10 +72,10 @@ public class FlowDiagram extends NodeNotify {
 
 	public void addConnectionNode(ConnectionNode connection) {
 
-		this.connectionNodes.add(connection);
-		this.registerNode(connection);
+		connectionNodes.add(connection);
+		registerNode(connection);
 
-		GotoNode source = (GotoNode) this.id2Node.get(connection.getSourceID());
+		GotoNode source = (GotoNode) id2Node.get(connection.getSourceID());
 		source.setLinkedConnectionNode(connection.getId());
 		connection.notifyChanged();
 		this.notifyChanged();
@@ -84,10 +84,10 @@ public class FlowDiagram extends NodeNotify {
 
 	public void removeConnectionNode(ConnectionNode connection) {
 
-		this.connectionNodes.remove(connection);
-		this.unRegisterNode(connection);
+		connectionNodes.remove(connection);
+		unRegisterNode(connection);
 
-		GotoNode source = (GotoNode) this.id2Node.get(connection.getSourceID());
+		GotoNode source = (GotoNode) id2Node.get(connection.getSourceID());
 		if (source != null) {
 			source.setLinkedConnectionNode(PluginConstant.NO_LINKED_CONNECTION_NODE);
 		}
@@ -96,11 +96,11 @@ public class FlowDiagram extends NodeNotify {
 	}
 
 	public void registerNode(Node<?> node) {
-		this.id2Node.put(node.getId(), node);
+		id2Node.put(node.getId(), node);
 	}
 
 	public void unRegisterNode(Node<?> node) {
-		this.id2Node.remove(node.getId());
+		id2Node.remove(node.getId());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -108,7 +108,7 @@ public class FlowDiagram extends NodeNotify {
 		if (id == PluginConstant.NULL_NODE) {
 			return null;
 		}
-		return (T) this.id2Node.get(id);
+		return (T) id2Node.get(id);
 	}
 
 	public void setEditor(FlowEditor editor) {
@@ -116,7 +116,7 @@ public class FlowDiagram extends NodeNotify {
 	}
 
 	public FlowEditor getEditor() {
-		return this.editor;
+		return editor;
 	}
 
 }

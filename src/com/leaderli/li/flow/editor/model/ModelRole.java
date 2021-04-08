@@ -21,8 +21,13 @@ public interface ModelRole {
 
 
 
+	int ADAPTER_FLAG_ALL = 0;
 
-	static boolean isTypeRole(int flag, int typeRole) {
-		return (flag & typeRole) == flag;
+	/**
+	 * 
+	 * flag = 0 时，则恒为true
+	 */
+	static boolean isTypeRole(int adapterFlag, int notifyTypeRole) {
+		return (adapterFlag & notifyTypeRole) == adapterFlag;
 	}
 }

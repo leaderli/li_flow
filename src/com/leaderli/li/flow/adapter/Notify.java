@@ -13,7 +13,7 @@ public interface Notify {
 	}
 
 	default int typeAndRole() {
-		return ModelRole.ALL_TYPE | ModelRole.ALL_ROLE;
+		return ModelRole.ADAPTER_FLAG_ALL;
 	}
 
 
