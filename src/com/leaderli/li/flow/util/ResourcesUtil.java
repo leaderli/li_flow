@@ -1,6 +1,11 @@
 package com.leaderli.li.flow.util;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -8,10 +13,13 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
@@ -30,7 +38,9 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.osgi.framework.Bundle;
 
+import com.leaderli.li.flow.LiPlugin;
 import com.leaderli.li.flow.constant.PluginConstant;
 
 public class ResourcesUtil {
@@ -154,7 +164,13 @@ public class ResourcesUtil {
 		ASTNode result = parser.createAST(null);
 		return result;
 	}
-
+	
+	public static void copyFileFromPluginToProject(String from,String to) throws Exception {
+		URL url = LiPlugin.getDefault().getBundle().getResource("resource/runner-1.0.jar");
+		URI uri = FileLocator.toFileURL(url).toURI();
+		File file = new File(uri);
+		System.out.println(file);
+	}
 
 
 }

@@ -40,6 +40,7 @@ public class PluginConstant {
 	public static final String SUBFLOW_SOURCE_BASE_PACKAGE = "flow.subflow.";
 
 	public static final String RESOURCE_DIR = "resource";
+	public static final String LIB_DIR = "lib";
 	public static final String TEMPLATE_EXTENSION = "template";
 
 	public static final String JAVA_EXTENSION = ".java";

@@ -27,6 +27,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: com.leaderli.li.flow
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
- lib/gson-2.8.5.jar
+ lib/gson-2.8.5.jar,
+ lib/dom4j-2.0.3.jar,
+ lib/jaxen-1.1.6.jar
 Import-Package: org.eclipse.emf.edit.ui.action,
  org.eclipse.wst.xml.ui.internal.tabletree
