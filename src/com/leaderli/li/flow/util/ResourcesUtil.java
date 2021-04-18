@@ -1,25 +1,19 @@
 package com.leaderli.li.flow.util;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
@@ -38,7 +32,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
-import org.osgi.framework.Bundle;
 
 import com.leaderli.li.flow.LiPlugin;
 import com.leaderli.li.flow.constant.PluginConstant;
@@ -56,23 +49,24 @@ public class ResourcesUtil {
 		return StringUtils.substringBeforeLast(fileName, ".");
 	}
 
-
-
-	public static String getFlowNodeSourceCodeTemplate(IProject project,String type) {
+	public static String getFlowNodeSourceCodeTemplate(IProject project, String type) {
 
 		try {
-			return IOUtils.toString(
-					project.getFile(PluginConstant.RESOURCE_DIR + File.separator + type + "." + PluginConstant.TEMPLATE_EXTENSION).getContents());
+			return IOUtils.toString(project.getFile(
+					PluginConstant.RESOURCE_DIR + File.separator + type + "." + PluginConstant.TEMPLATE_EXTENSION)
+					.getContents());
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		
+
 	}
+
 	public static IFolder getSourceFolderOfSubflow(IProject project, String packageName) {
 		packageName = packageName.replace('.', File.separatorChar);
 		return project.getFolder(PluginConstant.SOURCE_DIR + File.separatorChar + packageName);
 
 	}
+
 	public static void openJava(String className, IProject project) {
 
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -108,30 +102,32 @@ public class ResourcesUtil {
 		IFolder folder = (IFolder) file.getParent();
 		try {
 			for (IResource mem : folder.members()) {
-				Assert.isTrue(!(name + PluginConstant.JAVA_EXTENSION).equals(mem.getName()), " duplicate named java file with [" + name + ".java]");
+				Assert.isTrue(!(name + PluginConstant.JAVA_EXTENSION).equals(mem.getName()),
+						" duplicate named java file with [" + name + ".java]");
 			}
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
 
 		ICompilationUnit unit = JavaCore.createCompilationUnitFrom(file);
-		RefactoringContribution contribution = RefactoringCore.getRefactoringContribution(IJavaRefactorings.RENAME_COMPILATION_UNIT);
+		RefactoringContribution contribution = RefactoringCore
+				.getRefactoringContribution(IJavaRefactorings.RENAME_COMPILATION_UNIT);
 
 		RenameJavaElementDescriptor descriptor = (RenameJavaElementDescriptor) contribution.createDescriptor();
 		descriptor.setProject(unit.getResource().getProject().getName());
 		descriptor.setNewName(name); // new name for a Class
 		descriptor.setJavaElement(unit);
-	
+
 		RefactoringStatus status = new RefactoringStatus();
 		try {
 			Refactoring refactoring = descriptor.createRefactoring(status);
-	
+
 			IProgressMonitor monitor = new NullProgressMonitor();
 			refactoring.checkInitialConditions(monitor);
 			refactoring.checkFinalConditions(monitor);
 			Change change = refactoring.createChange(monitor);
 			change.perform(monitor);
-	
+
 			return folder.getFile(name + PluginConstant.JAVA_EXTENSION);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -164,13 +160,40 @@ public class ResourcesUtil {
 		ASTNode result = parser.createAST(null);
 		return result;
 	}
-	
-	public static void copyFileFromPluginToProject(String from,String to) throws Exception {
-		URL url = LiPlugin.getDefault().getBundle().getResource("resource/runner-1.0.jar");
-		URI uri = FileLocator.toFileURL(url).toURI();
-		File file = new File(uri);
-		System.out.println(file);
+
+	public static void copyFileFromPluginToProject(IProject project, String from, String to) throws Exception {
+
+		IFile toFile = project.getFile(to);
+
+		if (toFile.exists()) {
+			return;
+		}
+
+		createFolder(toFile);
+
+		URL fromURL = LiPlugin.getDefault().getBundle().getResource(from);
+
+		toFile.create(fromURL.openStream(),true,null);
 	}
 
+	public static void createFolder(IFile file) throws CoreException {
+
+		IContainer parent = file.getParent();
+		if (parent instanceof IFolder) {
+			createFolder((IFolder) parent);
+		}
+	}
+
+	public static void createFolder(IFolder folder) throws CoreException {
+
+		if (folder.exists()) {
+			return;
+		}
+		IContainer parent = folder.getParent();
+		if (parent instanceof IFolder) {
+			createFolder((IFolder) parent);
+		}
+		folder.create(false, true, null);
+	}
 
 }

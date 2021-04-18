@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
@@ -27,7 +28,6 @@ import org.eclipse.jdt.core.dom.Name;
 import com.leaderli.li.flow.LiPlugin;
 import com.leaderli.li.flow.constant.PluginConstant;
 import com.leaderli.li.flow.editor.model.FlowNode;
-import com.leaderli.li.flow.util.ResourcesUtil;
 
 public class AstJavaAction extends SelectionContextMenuAction<FlowNode> {
 
@@ -54,6 +54,11 @@ public class AstJavaAction extends SelectionContextMenuAction<FlowNode> {
 
 		IFile java = (IFile) editPart.getAdapter(IFile.class);
 		IProject project = java.getProject();
+		IPath path = project.getFullPath().append("lib/runner-1.0.jar");
+		System.out.println(path);
+		System.out.println(project.getFile("lib/runner-1.0.jar").exists());
+		if(true)
+		return;
 		IFolder folder= (IFolder) project.getFolder(PluginConstant.LIB_DIR);
 		if(!folder.exists()) {
 			try {
@@ -107,7 +112,7 @@ public class AstJavaAction extends SelectionContextMenuAction<FlowNode> {
 		}
         {
 			try {
-				ResourcesUtil.copyFileFromPluginToProject("","");
+//				ResourcesUtil.copyFileFromPluginToProject("","");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

@@ -14,6 +14,14 @@
             id="com.leaderli.li.flow.createFlowWizard"
             name="flow">
       </wizard>
+      <wizard
+            category="com.leaderli.li.flow.category"
+            class="com.leaderli.li.flow.wizard.CreateFlowProjectWizard"
+            icon="icon/module.gif"
+            id="com.leaderli.li.flow.createFlowProjectWizard"
+            name="flow"
+            project="true">
+      </wizard>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
