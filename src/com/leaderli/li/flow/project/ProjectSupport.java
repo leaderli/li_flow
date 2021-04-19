@@ -28,18 +28,33 @@ public class ProjectSupport {
 
 			addNature(project);
 			addBuildSpec(project);
-			String[] folders = { "flow", "src", "resource" };
+			String[] folders = { "flow", "src/com/leaderli/li/flow/base", "resource" };
 			addToPrjectStructure(project, folders);
 			
 			addClassPath(project);
 			addDependency(project);
 			addCodeTemplate(project);
+			addBaseCode(project);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			project = null;
 		}
 		return project;
+	}
+
+	private static void addBaseCode(IProject project) throws Exception {
+		addBaseCode(project, "BaseReturn");
+		addBaseCode(project, "BaseServlet");
+		addBaseCode(project, "BaseSubFlow");
+		addBaseCode(project, "Session");
+
+	}
+
+	private static void addBaseCode(IProject project, String name) throws Exception {
+		String fromTo = "src/com/leaderli/li/flow/base/" + name + ".java";
+		ResourcesUtil.copyFileFromPluginToProject(project, fromTo, fromTo);
+
 	}
 
 	private static void addCodeTemplate(IProject project) throws Exception {

@@ -1,6 +1,6 @@
 $package
 
-import com.leaderli.li.flow.BaseReturn;
+import com.leaderli.li.flow.base.BaseReturn;
 
 public class $name  implements BaseReturn {
 

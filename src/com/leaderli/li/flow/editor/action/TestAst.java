@@ -16,7 +16,6 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import com.leaderli.li.flow.util.ResourcesUtil;
 
 public class TestAst {
-	@SuppressWarnings("deprecation")
 	public static void main(String[] args) throws Exception {
 		File file = new File("/Users/li/java/runtime-EclipseApplication/test_java/resource/servlet.template");
 

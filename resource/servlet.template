@@ -3,8 +3,8 @@ $package
 import java.util.HashMap;
 import java.util.Map;
 
-import com.leaderli.li.flow.BaseServlet;
-import com.leaderli.li.flow.Session;
+import com.leaderli.li.flow.base.BaseServlet;
+import com.leaderli.li.flow.base.Session;
 
 public class $name implements BaseServlet{
 

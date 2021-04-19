@@ -57,9 +57,7 @@ public class AstJavaAction extends SelectionContextMenuAction<FlowNode> {
 		IPath path = project.getFullPath().append("lib/runner-1.0.jar");
 		System.out.println(path);
 		System.out.println(project.getFile("lib/runner-1.0.jar").exists());
-		if(true)
-		return;
-		IFolder folder= (IFolder) project.getFolder(PluginConstant.LIB_DIR);
+		IFolder folder= project.getFolder(PluginConstant.LIB_DIR);
 		if(!folder.exists()) {
 			try {
 				folder.create(true, true, null);
