@@ -16,7 +16,7 @@
       </wizard>
       <wizard
             category="com.leaderli.li.flow.category"
-            class="com.leaderli.li.flow.wizard.CreateFlowProjectWizard"
+            class="com.leaderli.li.flow.project.CreateFlowProjectWizard"
             icon="icon/module.gif"
             id="com.leaderli.li.flow.createFlowProjectWizard"
             name="flow"

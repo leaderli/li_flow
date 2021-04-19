@@ -32,7 +32,6 @@ public class ProjectSupport {
 			addToPrjectStructure(project, folders);
 			
 			addClassPath(project);
-			addDependency(project);
 			addCodeTemplate(project);
 			addBaseCode(project);
 
@@ -52,8 +51,9 @@ public class ProjectSupport {
 	}
 
 	private static void addBaseCode(IProject project, String name) throws Exception {
-		String fromTo = "src/com/leaderli/li/flow/base/" + name + ".java";
-		ResourcesUtil.copyFileFromPluginToProject(project, fromTo, fromTo);
+		String from = "resource/" + name + ".java";
+		String to = "src/com/leaderli/li/flow/base/" + name + ".java";
+		ResourcesUtil.copyFileFromPluginToProject(project, from, to);
 
 	}
 
@@ -69,11 +69,6 @@ public class ProjectSupport {
 		ResourcesUtil.copyFileFromPluginToProject(project, fromTo, fromTo);
 	}
 
-	private static void addDependency(IProject project) throws Exception {
-		String from = "resource/runner-1.0.jar";
-		String to = "lib/runner-1.0.jar";
-		ResourcesUtil.copyFileFromPluginToProject(project, from, to);
-	}
 
 	private static void addClassPath(IProject project) throws Exception {
 		String from = "resource/new_project_classpath.xml";

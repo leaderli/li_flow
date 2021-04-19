@@ -1,4 +1,4 @@
-package com.leaderli.li.flow.wizard;
+package com.leaderli.li.flow.project;
 
 import java.net.URI;
 
@@ -9,8 +9,6 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
-
-import com.leaderli.li.flow.project.ProjectSupport;
 
 public class CreateFlowProjectWizard extends Wizard implements INewWizard {
 	IWorkbench workbench;
