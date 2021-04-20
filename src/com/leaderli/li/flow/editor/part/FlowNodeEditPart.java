@@ -269,6 +269,7 @@ public class FlowNodeEditPart extends GenericsEditPart<FlowNode> implements Node
 		this.addNotify(new MoveFlowNodeAdapter());
 		this.addNotify(new ConnectionTargetFlowNodeAdapter());
 		this.addNotify(new ModifyFlowNodeChildAdapter());
+		this.addNotify(new ModifyJavaAdapter());
 
 		propertySource = new GenericsPropertySource<>();
 
@@ -363,6 +364,25 @@ public class FlowNodeEditPart extends GenericsEditPart<FlowNode> implements Node
 		@Override
 		public int typeAndRole() {
 			return FLOW_TYPE | CHILD_ROLE;
+		}
+
+	}
+
+	private class ModifyJavaAdapter implements Notify {
+
+		@Override
+		public void notifyChanged(int typeRole, String oldVal, String newVal) {
+			try {
+				modifyJava();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+
+		@Override
+		public int typeAndRole() {
+			return FLOW_TYPE | JAVA_CODE_ROLE;
 		}
 
 	}

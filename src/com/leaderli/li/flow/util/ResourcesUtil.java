@@ -46,8 +46,9 @@ public class ResourcesUtil {
 		if (StringUtils.isEmpty(fileName) || !fileName.contains(".")) {
 			return fileName;
 		}
-		return StringUtils.substringBeforeLast(fileName, ".");
+		return StringUtils.substringAfterLast(fileName, ".");
 	}
+
 
 	public static String getFlowNodeSourceCodeTemplate(IProject project, String type) {
 

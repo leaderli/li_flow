@@ -26,10 +26,8 @@ public class ConnectionNodeCreateCommand extends Command {
 		connection.setParent(flowDiagram);
 
 		connection.setSourceID(source.getId());
-		connection.setSourceFlowNodeID(source.getParent().getId());
 
 		connection.setTargetID(target.getId());
-		connection.setTargetFlowNodeID(target.getId());
 
 		flowDiagram.addConnectionNode(connection);
 	

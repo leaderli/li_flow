@@ -18,8 +18,15 @@ public class ConnectionNode extends Node<FlowDiagram> {
 
 	public void setSourceID(int sourceID) {
 		this.sourceID = sourceID;
+		Node<GotoNode> source = getParent().getRegisterNode(this.sourceID);
+		sourceFlowNodeID = source.getParent().getId();
 
 	}
+
+	public int getSourceFlowNodeID() {
+		return sourceFlowNodeID;
+	}
+
 
 	public int getTargetID() {
 		return targetID;
@@ -27,23 +34,15 @@ public class ConnectionNode extends Node<FlowDiagram> {
 
 	public void setTargetID(int targetID) {
 		this.targetID = targetID;
-	}
-
-	public int getSourceFlowNodeID() {
-		return sourceFlowNodeID;
-	}
-
-	public void setSourceFlowNodeID(int sourceFlowNodeID) {
-		this.sourceFlowNodeID = sourceFlowNodeID;
+		targetFlowNodeID = this.targetID;
 	}
 
 	public int getTargetFlowNodeID() {
 		return targetFlowNodeID;
 	}
 
-	public void setTargetFlowNodeID(int targetFlowNodeID) {
-		this.targetFlowNodeID = targetFlowNodeID;
-	}
+
+
 
 	public List<Location> getBendpoints() {
 		if (bendpoints == null) {

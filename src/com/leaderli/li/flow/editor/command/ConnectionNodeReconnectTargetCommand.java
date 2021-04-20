@@ -17,7 +17,6 @@ public class ConnectionNodeReconnectTargetCommand extends ModelCommand<Connectio
 			oldTarget = getModel().getParent().getRegisterNode(getModel().getTargetID());
 		}
 		getModel().setTargetID(newTarget.getId());
-		getModel().setTargetFlowNodeID(newTarget.getId());
 		
 		getModel().notifyChanged();
 
@@ -26,7 +25,6 @@ public class ConnectionNodeReconnectTargetCommand extends ModelCommand<Connectio
 	@Override
 	public void undo() {
 		getModel().setTargetID(oldTarget.getId());
-		getModel().setTargetFlowNodeID(oldTarget.getId());
 		getModel().notifyChanged();
 
 	}

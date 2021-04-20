@@ -14,6 +14,7 @@ public class GotoNode extends Node<FlowNode>{
 	public void setLinkedConnectionNode(int linkedConnectionNode) {
 		this.linkedConnectionNode = linkedConnectionNode;
 		this.notifyChanged(GOTO_TYPE | CONNECTION_SOURCE_ROLE);
+		getParent().notifyChanged(FLOW_TYPE | CHILD_ROLE);
 	}
 
 	public String getName() {

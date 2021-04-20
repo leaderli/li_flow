@@ -18,7 +18,6 @@ public class ConnectionNodeReconnectSourceCommand extends ModelCommand<Connectio
 			oldSource = getModel().getParent().getRegisterNode(getModel().getSourceID());
 		}
 		getModel().setSourceID(newSource.getId());
-		getModel().setSourceFlowNodeID(newSource.getParent().getId());
 		newSource.setLinkedConnectionNode(getModel().getId());
 		oldSource.setLinkedConnectionNode(PluginConstant.NO_LINKED_CONNECTION_NODE);
 		
@@ -29,7 +28,6 @@ public class ConnectionNodeReconnectSourceCommand extends ModelCommand<Connectio
 	@Override
 	public void undo() {
 		getModel().setSourceID(oldSource.getId());
-		getModel().setSourceFlowNodeID(oldSource.getParent().getId());
 		oldSource.setLinkedConnectionNode(getModel().getId());
 		newSource.setLinkedConnectionNode(PluginConstant.NO_LINKED_CONNECTION_NODE);
 
