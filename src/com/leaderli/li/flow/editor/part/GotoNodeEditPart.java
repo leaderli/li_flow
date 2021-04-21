@@ -62,7 +62,7 @@ public class GotoNodeEditPart extends GenericsEditPart<GotoNode> implements Node
 	@Override
 	protected void refreshVisuals() {
 		// 没有连接线的gotoNode用红色表示
-		if (getModel().getLinkedConnectionNode() == PluginConstant.NO_LINKED_CONNECTION_NODE) {
+		if (getModel().getLinkedConnectionNode() == null) {
 			figure.setForegroundColor(new Color(Display.getDefault(), new RGB(255, 0, 0)));
 		} else {
 			figure.setForegroundColor(new Color(Display.getDefault(), new RGB(0, 0, 0)));
@@ -82,7 +82,7 @@ public class GotoNodeEditPart extends GenericsEditPart<GotoNode> implements Node
 	protected List<ConnectionNode> getModelSourceConnections() {
 		List<ConnectionNode> connectionNodes = ((FlowDiagramEditPart) getParent().getParent()).getModel()
 				.getConnectionNodes();
-		return connectionNodes.stream().filter(connectionNode -> getModel().getId() == connectionNode.getSourceID())
+		return connectionNodes.stream().filter(connectionNode -> getModel() == connectionNode.getSourceID())
 				.collect(Collectors.toList());
 	}
 

@@ -46,6 +46,8 @@ import com.leaderli.li.flow.editor.part.ConnectionNodeEditPart;
 import com.leaderli.li.flow.editor.part.EditPartFactoryUtil;
 import com.leaderli.li.flow.editor.part.FlowDiagramEditPart;
 import com.leaderli.li.flow.editor.part.GotoNodeEditPart;
+import com.leaderli.li.flow.editor.serialize.SerializeFlowDiagram;
+import com.leaderli.li.flow.editor.serialize.SerializeUtil;
 import com.leaderli.li.flow.image.TabImageProvider;
 import com.leaderli.li.flow.util.GsonUtil;
 import com.leaderli.li.flow.util.ModelUtil;
@@ -68,11 +70,11 @@ public class FlowEditor extends GraphicalEditorWithFlyoutPalette {
 	 */
 	@Override
 	protected PaletteRoot getPaletteRoot() {
-		if (this.palette == null) {
+		if (palette == null) {
 
-			this.palette = new FlowEditorPaletteRoot(this.getProject());
+			palette = new FlowEditorPaletteRoot(getProject());
 		}
-		return this.palette.getPaletteRoot();
+		return palette.getPaletteRoot();
 	}
 
 	@Override
@@ -88,11 +90,12 @@ public class FlowEditor extends GraphicalEditorWithFlyoutPalette {
 		// /**
 		// * 可以将未保存状态的*号移除
 		// */
-		this.getCommandStack().markSaveLocation();
+		getCommandStack().markSaveLocation();
 
-		IFile iFile = ((IFileEditorInput) this.getEditorInput()).getFile();
-		Object model = this.getGraphicalViewer().getContents().getModel();
-		InputStream stream = new ByteArrayInputStream(GsonUtil.toJson(model).getBytes());
+		IFile iFile = ((IFileEditorInput) getEditorInput()).getFile();
+		FlowDiagram flowDiagram = (FlowDiagram) getGraphicalViewer().getContents().getModel();
+		SerializeFlowDiagram seriaFlowDiagram = SerializeUtil.transfer(flowDiagram);
+		InputStream stream = new ByteArrayInputStream(GsonUtil.toJson(seriaFlowDiagram).getBytes());
 		try {
 			iFile.setContents(stream, true, true, monitor);
 		} catch (CoreException e) {
@@ -110,14 +113,13 @@ public class FlowEditor extends GraphicalEditorWithFlyoutPalette {
 //		super.commandStackChanged(event);
 //	}
 
-
 	@Override
 	public void init(IEditorSite site, IEditorInput editorInput) throws PartInitException {
 
 		Assert.isTrue(editorInput instanceof IFileEditorInput, "Invalid Input: Must be IFileEditorInput");
-		this.flowFile = ((IFileEditorInput) editorInput).getFile();
-		LiPlugin.getDefault().getCallflowController().init(this.flowFile.getProject());
-		this.setEditDomain(new DefaultEditDomain(this));
+		flowFile = ((IFileEditorInput) editorInput).getFile();
+		LiPlugin.getDefault().getCallflowController().init(flowFile.getProject());
+		setEditDomain(new DefaultEditDomain(this));
 		super.init(site, editorInput);
 		// 编辑器的标题
 		this.setPartName(editorInput);
@@ -145,26 +147,15 @@ public class FlowEditor extends GraphicalEditorWithFlyoutPalette {
 		 * 会根据EditPartFactory找到对应的EditPart来处理
 		 */
 
-		IFile iFile = ((IFileEditorInput) this.getEditorInput()).getFile();
-		this.getGraphicalViewer().setContents(this.loadInputFile(iFile));
+		IFile iFile = ((IFileEditorInput) getEditorInput()).getFile();
+		getGraphicalViewer().setContents(loadInputFile(iFile));
 	}
 
 	private FlowDiagram loadInputFile(IFile file) {
 
 		try {
-			final FlowDiagram flowDiagram = GsonUtil.fromJson(file.getContents(), FlowDiagram.class);
-			flowDiagram.getFlowNodes().forEach(flowNode -> {
-				flowNode.setParent(flowDiagram);
-				flowDiagram.registerNode(flowNode);
-				flowNode.getGotoNodes().forEach(gotoNode -> {
-					gotoNode.setParent(flowNode);
-					flowDiagram.registerNode(gotoNode);
-				});
-			});
-			flowDiagram.getConnectionNodes().forEach(connectionNode -> {
-				connectionNode.setParent(flowDiagram);
-				flowDiagram.registerNode(connectionNode);
-			});
+			SerializeFlowDiagram seriaFlowDiagram = GsonUtil.fromJson(file.getContents(), SerializeFlowDiagram.class);
+			FlowDiagram flowDiagram = SerializeUtil.transfer(seriaFlowDiagram);
 			return flowDiagram;
 		} catch (CoreException e) {
 			e.printStackTrace();
@@ -174,12 +165,12 @@ public class FlowEditor extends GraphicalEditorWithFlyoutPalette {
 
 	public IFile getFile() {
 
-		return this.flowFile;
+		return flowFile;
 	}
 
 	public IProject getProject() {
 
-		return this.getFile().getProject();
+		return getFile().getProject();
 	}
 
 	/**
@@ -201,8 +192,8 @@ public class FlowEditor extends GraphicalEditorWithFlyoutPalette {
 	private EditPartFactory editPartFactory;
 
 	private EditPartFactory getEditPartFactory() {
-		if (this.editPartFactory == null) {
-			this.editPartFactory = (part, model) -> {
+		if (editPartFactory == null) {
+			editPartFactory = (part, model) -> {
 				EditPart editPart = null;
 
 				if (model instanceof ConnectionNode) {
@@ -225,7 +216,7 @@ public class FlowEditor extends GraphicalEditorWithFlyoutPalette {
 			};
 
 		}
-		return this.editPartFactory;
+		return editPartFactory;
 	}
 
 	@Override
@@ -233,25 +224,25 @@ public class FlowEditor extends GraphicalEditorWithFlyoutPalette {
 
 		super.configureGraphicalViewer();
 		FlowEditor editor = this;
-		GraphicalViewer graphicalViewer = this.getGraphicalViewer();
-		graphicalViewer.setEditPartFactory(this.getEditPartFactory());
+		GraphicalViewer graphicalViewer = getGraphicalViewer();
+		graphicalViewer.setEditPartFactory(getEditPartFactory());
 		graphicalViewer.addDropTargetListener(new TemplateTransferDropTargetListener(graphicalViewer));
-		this.getEditDomain().getPaletteViewer()
-				.addDragSourceListener(new TemplateTransferDragSourceListener(this.getEditDomain().getPaletteViewer()));
-		this.configureKeyboardShortcuts();
-		graphicalViewer.setContextMenu(new FLowEditorContextMenuProvider(this.getActionRegistry(), graphicalViewer));
+		getEditDomain().getPaletteViewer()
+				.addDragSourceListener(new TemplateTransferDragSourceListener(getEditDomain().getPaletteViewer()));
+		configureKeyboardShortcuts();
+		graphicalViewer.setContextMenu(new FLowEditorContextMenuProvider(getActionRegistry(), graphicalViewer));
 
 	}
 
 	private void configureKeyboardShortcuts() {
-		this.getGraphicalViewer().setKeyHandler(new FlowEditorKeyHandler(this.getGraphicalViewer()));
+		getGraphicalViewer().setKeyHandler(new FlowEditorKeyHandler(getGraphicalViewer()));
 	}
 
 	@Override
 	protected void createActions() {
 
-		this.createSelectionContextMenuAction(EditRelateJavaAction.class);
-		this.createSelectionContextMenuAction(AstJavaAction.class);
+		createSelectionContextMenuAction(EditRelateJavaAction.class);
+		createSelectionContextMenuAction(AstJavaAction.class);
 		// ActionRegistry registry = this.getActionRegistry();
 		// IAction action = new FlowNodeSelectionAction(this);
 		// registry.registerAction(action);
@@ -263,7 +254,7 @@ public class FlowEditor extends GraphicalEditorWithFlyoutPalette {
 		try {
 			SelectionContextMenuAction<?> action = actionClass.newInstance();
 			action.setWorkbenchPart(this);
-			this.getActionRegistry().registerAction(action);
+			getActionRegistry().registerAction(action);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -275,9 +266,9 @@ public class FlowEditor extends GraphicalEditorWithFlyoutPalette {
 		if (type == TabImageProvider.class) {
 			return TabImageProvider.instance("flow.gif");
 		} else if (type == IProject.class) {
-			return this.getProject();
+			return getProject();
 		} else if (type == IFile.class) {
-			return this.getFile();
+			return getFile();
 		}
 
 		return super.getAdapter(type);
@@ -285,7 +276,7 @@ public class FlowEditor extends GraphicalEditorWithFlyoutPalette {
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		IWorkbenchPartSite site = this.getSite();
+		IWorkbenchPartSite site = getSite();
 		if (site != null) {
 			IWorkbenchWindow window = site.getWorkbenchWindow();
 			if (window != null) {
@@ -293,7 +284,7 @@ public class FlowEditor extends GraphicalEditorWithFlyoutPalette {
 				if (page != null) {
 					IEditorPart editorPart = page.getActiveEditor();
 					if (editorPart != null) {
-						this.updateActions(this.getSelectionActions());
+						updateActions(getSelectionActions());
 					}
 				}
 			}
@@ -306,24 +297,24 @@ public class FlowEditor extends GraphicalEditorWithFlyoutPalette {
 
 		private FlowEditorKeyHandler(GraphicalViewer viewer) {
 			super(viewer);
-			this.enabled = true;
+			enabled = true;
 			viewer.getControl().addListener(31, this);
 		}
 
 		@Override
 		public boolean keyPressed(KeyEvent event) {
-			if (this.enabled && event.keyCode == FlowEditorPaletteRoot.CONNECTION_TOOL_ACTIVATE_KEY_CODE) {
-				PaletteViewer pv = FlowEditor.this.getEditDomain().getPaletteViewer();
-				this.activeEntry = pv.getActiveTool();
-				pv.setActiveTool(FlowEditor.this.palette.getConnectionTool());
+			if (enabled && event.keyCode == FlowEditorPaletteRoot.CONNECTION_TOOL_ACTIVATE_KEY_CODE) {
+				PaletteViewer pv = getEditDomain().getPaletteViewer();
+				activeEntry = pv.getActiveTool();
+				pv.setActiveTool(palette.getConnectionTool());
 			}
 			return super.keyPressed(event);
 		}
 
 		@Override
 		public boolean keyReleased(KeyEvent event) {
-			if (this.enabled && event.keyCode == FlowEditorPaletteRoot.CONNECTION_TOOL_ACTIVATE_KEY_CODE) {
-				FlowEditor.this.getEditDomain().getPaletteViewer().setActiveTool(this.activeEntry);
+			if (enabled && event.keyCode == FlowEditorPaletteRoot.CONNECTION_TOOL_ACTIVATE_KEY_CODE) {
+				getEditDomain().getPaletteViewer().setActiveTool(activeEntry);
 			}
 			return super.keyReleased(event);
 		}

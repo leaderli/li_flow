@@ -18,7 +18,7 @@ public class GotoNodeDeleteCommand extends CommandExecuteInCommandStack<GotoNode
 
 	@Override
 	public void execute() {
-		linkedConnectionNode = parent.getParent().getRegisterNode(model.getLinkedConnectionNode());
+		linkedConnectionNode = model.getLinkedConnectionNode();
 		if (linkedConnectionNode != null) {
 			parent.getParent().removeConnectionNode(linkedConnectionNode);
 
@@ -28,8 +28,8 @@ public class GotoNodeDeleteCommand extends CommandExecuteInCommandStack<GotoNode
 
 	@Override
 	public void initFlowEditor() {
-		if (this.flowEditor == null) {
-			this.flowEditor = parent.getParent().getEditor();
+		if (flowEditor == null) {
+			flowEditor = parent.getParent().getEditor();
 		}
 	}
 

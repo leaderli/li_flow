@@ -12,7 +12,6 @@ import org.eclipse.swt.graphics.Image;
 import com.leaderli.li.flow.constant.PluginConstant;
 import com.leaderli.li.flow.editor.model.ConnectionNode;
 import com.leaderli.li.flow.editor.model.FlowDiagram;
-import com.leaderli.li.flow.editor.model.FlowNode;
 import com.leaderli.li.flow.editor.model.GotoNode;
 import com.leaderli.li.flow.editor.policy.GotoNodeComponentEditPolicy;
 import com.leaderli.li.flow.util.ImageUtil;
@@ -26,11 +25,10 @@ public class GotoNodeTreeEditPart extends GenericsEditPart<GotoNode> {
 		GotoNode gotoNode = getModel();
 
 		FlowDiagram dialgram = gotoNode.getParent().getParent();
-		ConnectionNode connectionNode = dialgram
-				.getRegisterNode(gotoNode.getLinkedConnectionNode());
+		ConnectionNode connectionNode = gotoNode.getLinkedConnectionNode();
 		String next = "not set ";
 		if (connectionNode != null) {
-			next = ((FlowNode) dialgram.getRegisterNode(connectionNode.getTargetFlowNodeID())).getName();
+			next = connectionNode.getTargetFlowNodeID().getName();
 		}
 		return "Goto <name=\"" + gotoNode.getName() + "\", next=\"" + next + "\">";
 	}

@@ -59,12 +59,10 @@ public class FlowNode extends Node<FlowDiagram> {
 	public void addGotoNode(GotoNode gotoNode) {
 		gotoNodes.add(gotoNode);
 		gotoNode.setParent(this);
-		registerNode(gotoNode);
 		this.notifyChanged(FLOW_TYPE | CHILD_ROLE);
 	}
 	public void removeGotoNode(GotoNode gotoNode) {
 		gotoNodes.remove(gotoNode);
-		unRegisterNode(gotoNode);
 		this.notifyChanged(FLOW_TYPE | CHILD_ROLE);
 	}
 
@@ -88,16 +86,5 @@ public class FlowNode extends Node<FlowDiagram> {
 
 
 
-	private void registerNode(GotoNode gotoNode) {
-		if (getParent() != null) {
-			getParent().registerNode(gotoNode);
-		}
-	}
-
-	private void unRegisterNode(GotoNode gotoNode) {
-		if (getParent() != null) {
-			getParent().unRegisterNode(gotoNode);
-		}
-	}
 
 }

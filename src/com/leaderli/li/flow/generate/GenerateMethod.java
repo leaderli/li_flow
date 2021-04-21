@@ -29,7 +29,7 @@ public class GenerateMethod {
 			FlowNode target = ModelUtil.getLinkedFlowNode(got);
 			String value = "";
 			if (target != null) {
-				value = ResourcesUtil.getSimpleName(flowDiagram.getPackageName());
+				value = ResourcesUtil.getPackageSimpleName(flowDiagram.getPackageName());
 				if (StringUtils.isNotEmpty(value)) {
 					value += "-";
 				}

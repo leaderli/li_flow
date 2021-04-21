@@ -2,8 +2,6 @@ package com.leaderli.li.flow.editor.model;
 
 import org.eclipse.gef.EditPart;
 
-import com.leaderli.li.flow.util.GsonUtil;
-
 public class Node<T extends NodeNotify> extends NodeNotify {
 	private int id;
 	private transient T parent;
@@ -17,10 +15,7 @@ public class Node<T extends NodeNotify> extends NodeNotify {
 		this.id = id;
 	}
 
-	@Override
-	public String toString() {
-		return GsonUtil.toJson(this);
-	}
+
 
 	public T getParent() {
 		return parent;

@@ -7,7 +7,6 @@ import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.jface.dialogs.IMessageProvider;
 
 import com.leaderli.li.flow.LiPlugin;
-import com.leaderli.li.flow.constant.PluginConstant;
 import com.leaderli.li.flow.dialog.WizardPageCommand;
 import com.leaderli.li.flow.editor.FlowEditor;
 import com.leaderli.li.flow.editor.command.FlowNodeRenameCommand;
@@ -102,17 +101,12 @@ public class ModelUtil {
 		if (flowDiagram == null) {
 			return null;
 		}
-		int connectionId = got.getLinkedConnectionNode();
-		if (connectionId == PluginConstant.NO_LINKED_CONNECTION_NODE) {
+		ConnectionNode connectionNode = got.getLinkedConnectionNode();
+		if (connectionNode == null) {
 			return null;
 		}
-		ConnectionNode connectionNode = flowDiagram.getRegisterNode(connectionId);
-		int target = connectionNode.getTargetFlowNodeID();
-		if (target == PluginConstant.NO_LINKED_CONNECTION_NODE) {
-			return null;
-		}
-		FlowNode node = flowDiagram.getRegisterNode(target);
-		return node;
+		FlowNode target = connectionNode.getTargetFlowNodeID();
+		return target;
 	}
 
 }
@@ -143,26 +137,26 @@ class RenameFlowNodeWizardPageCommand extends WizardPageCommand<FlowNode, FlowDi
 	@Override
 	public void checkComplete() {
 
-		this.setPageComplete(false);
-		IStatus status = ModelUtil.validateFlowNodeName(this.flowNode, this.getPageText());
+		setPageComplete(false);
+		IStatus status = ModelUtil.validateFlowNodeName(flowNode, getPageText());
 		int messageType = ModelUtil.status2MessageType(status);
-		this.setMessage(status.getMessage(), messageType);
+		setMessage(status.getMessage(), messageType);
 		if (status.isOK()) {
-			this.setPageComplete(true);
+			setPageComplete(true);
 		}
 
 	}
 
 	@Override
 	protected void whenPageComplete() {
-		this.renameCommand.setNewName(this.getPageText());
+		renameCommand.setNewName(getPageText());
 	}
 
 	@Override
 	protected boolean performFinish() {
-		if (this.isPageComplete()) {
-			if (this.canExecute()) {
-				this.commandStack.execute(this.commandProxy);
+		if (isPageComplete()) {
+			if (canExecute()) {
+				commandStack.execute(commandProxy);
 				return true;
 			}
 		}

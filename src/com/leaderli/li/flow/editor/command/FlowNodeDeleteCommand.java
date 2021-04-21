@@ -14,8 +14,9 @@ public class FlowNodeDeleteCommand extends ModelCommand<FlowNode,FlowDiagram> {
 
 	private FlowDiagram parent;
 
-	private List<ConnectionNode> removedConnectionNode = new ArrayList<ConnectionNode>();
+	private List<ConnectionNode> removedConnectionNode = new ArrayList<>();
 
+	@Override
 	public void setParent(FlowDiagram parent) {
 		this.parent = parent;
 	}
@@ -25,8 +26,8 @@ public class FlowNodeDeleteCommand extends ModelCommand<FlowNode,FlowDiagram> {
 	public void execute() {
 		parent.removeFlowNode(model);
 		// 删除该node相关的线条
-		parent.getConnectionNodes().stream().filter(connection -> connection.getTargetFlowNodeID() == model.getId() 
-				|| connection.getSourceFlowNodeID() == model.getId())
+		parent.getConnectionNodes().stream().filter(connection -> connection.getTargetFlowNodeID() == model
+				|| connection.getSourceFlowNodeID() == model)
 				.forEach(removedConnectionNode::add);
 		
 		removedConnectionNode.forEach(parent::removeConnectionNode);

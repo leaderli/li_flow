@@ -47,7 +47,7 @@ class NewFlowWizardPage extends WizardPage {
 		}
 
 		List<IFile> flowFiles = LiPlugin.getDefault().getCallflowController().getProjectFlowFiles(Resources.project);
-		if (flowFiles.stream().map(ResourcesUtil::getSimpleName).anyMatch(f -> f.equalsIgnoreCase(fileName))) {
+		if (flowFiles.stream().map(ResourcesUtil::getFileSimpleName).anyMatch(f -> f.equalsIgnoreCase(fileName))) {
 			this.setMessage("A flow named " + fileName + " already exists", IMessageProvider.ERROR);
 			return;
 		}

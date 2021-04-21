@@ -155,7 +155,7 @@ public class FlowNodeEditPart extends GenericsEditPart<FlowNode> implements Node
 	@Override
 	protected List<ConnectionNode> getModelTargetConnections() {
 		List<ConnectionNode> connectionNodes = ((FlowDiagramEditPart) getParent()).getModel().getConnectionNodes();
-		return connectionNodes.stream().filter(connectionNode -> getModel().getId() == connectionNode.getTargetID())
+		return connectionNodes.stream().filter(connectionNode -> getModel() == connectionNode.getTargetID())
 				.collect(Collectors.toList());
 	}
 
@@ -259,7 +259,7 @@ public class FlowNodeEditPart extends GenericsEditPart<FlowNode> implements Node
 
 		List<String> subFlowNames = new ArrayList<>(
 				LiPlugin.getDefault().getCallflowController().getSubFlowNames(getProject()));
-		subFlowNames.remove(ResourcesUtil.getSimpleName(getModel().getParent().getEditor().getFile()));
+		subFlowNames.remove(ResourcesUtil.getFileSimpleName(getModel().getParent().getEditor().getFile()));
 		return subFlowNames.stream().toArray(len -> new String[len]);
 	}
 

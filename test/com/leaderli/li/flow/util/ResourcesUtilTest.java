@@ -6,9 +6,9 @@ public class ResourcesUtilTest {
 
 	@Test
 	public void test() {
-		assert "flow".equals(ResourcesUtil.getSimpleName("flow"));
-		assert "flow".equals(ResourcesUtil.getSimpleName("b.flow"));
-		assert !"flow".equals(ResourcesUtil.getSimpleName("flow.b"));
+		assert "flow".equals(ResourcesUtil.getPackageSimpleName("flow"));
+		assert "flow".equals(ResourcesUtil.getPackageSimpleName("b.flow"));
+		assert !"flow".equals(ResourcesUtil.getPackageSimpleName("flow.b"));
 	}
 
 }

@@ -5,39 +5,38 @@ import java.util.List;
 
 public class ConnectionNode extends Node<FlowDiagram> {
 
-	private int sourceID;
-	private int targetID;
-	private int sourceFlowNodeID;
-	private int targetFlowNodeID;
+	private GotoNode sourceID;
+	private FlowNode targetID;
+	private FlowNode sourceFlowNodeID;
+	private FlowNode targetFlowNodeID;
 
 	private List<Location> bendpoints;
 
-	public int getSourceID() {
+	public GotoNode getSourceID() {
 		return sourceID;
 	}
 
-	public void setSourceID(int sourceID) {
+	public void setSourceID(GotoNode sourceID) {
 		this.sourceID = sourceID;
-		Node<GotoNode> source = getParent().getRegisterNode(this.sourceID);
-		sourceFlowNodeID = source.getParent().getId();
+		sourceFlowNodeID = sourceID.getParent();
 
 	}
 
-	public int getSourceFlowNodeID() {
+	public FlowNode getSourceFlowNodeID() {
 		return sourceFlowNodeID;
 	}
 
 
-	public int getTargetID() {
+	public FlowNode getTargetID() {
 		return targetID;
 	}
 
-	public void setTargetID(int targetID) {
+	public void setTargetID(FlowNode targetID) {
 		this.targetID = targetID;
 		targetFlowNodeID = this.targetID;
 	}
 
-	public int getTargetFlowNodeID() {
+	public FlowNode getTargetFlowNodeID() {
 		return targetFlowNodeID;
 	}
 
@@ -73,13 +72,11 @@ public class ConnectionNode extends Node<FlowDiagram> {
 
 	@Override
 	public void notifyChanged() {
-		Node<?> source = getParent().getRegisterNode(getSourceID());
-		if (source != null) {
-			source.notifyChanged(GOTO_TYPE | CONNECTION_SOURCE_ROLE);
+		if (sourceID != null) {
+			sourceID.notifyChanged(GOTO_TYPE | CONNECTION_SOURCE_ROLE);
 		}
-		Node<?> target = getParent().getRegisterNode(getTargetID());
-		if (target != null) {
-			target.notifyChanged(FLOW_TYPE | CONNECTION_TARGET_ROLE);
+		if (targetID != null) {
+			targetID.notifyChanged(FLOW_TYPE | CONNECTION_TARGET_ROLE);
 		}
 	}
 
