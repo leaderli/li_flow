@@ -24,6 +24,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 
 import com.leaderli.li.flow.editor.action.SelectionContextMenuAction;
+import com.leaderli.li.flow.editor.part.GenericsEditPart;
 import com.leaderli.li.flow.util.GEFUtil;
 
 public class FLowEditorContextMenuProvider extends ContextMenuProvider {
@@ -87,7 +88,7 @@ public class FLowEditorContextMenuProvider extends ContextMenuProvider {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void buildContextMenu(IMenuManager menu) {
 
@@ -95,14 +96,14 @@ public class FLowEditorContextMenuProvider extends ContextMenuProvider {
 
 		EditPart editPart = getViewer().findObjectAt(GEFUtil.getCursorPointAtDiagram(getViewer()));
 
-		actionRegistry.getActions().forEachRemaining(action -> {
-			if (action instanceof SelectionContextMenuAction) {
-				SelectionContextMenuAction.registrySelectionContextMenu(menu, (SelectionContextMenuAction<?>) action,
-						editPart);
-			}
+		if (editPart instanceof GenericsEditPart) {
 
-		});
-		;
+			actionRegistry.getActions().forEachRemaining(action -> {
+				if (action instanceof SelectionContextMenuAction<?, ?, ?>) {
+					SelectionContextMenuAction.registrySelectionContextMenu(menu, (SelectionContextMenuAction) action, editPart);
+				}
+			});
+		}
 	}
 
 }

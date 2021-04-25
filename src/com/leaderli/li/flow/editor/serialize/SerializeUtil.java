@@ -66,7 +66,7 @@ public class SerializeUtil {
 
 			connectionNode.setId(seriaConnection.getId());
 //			connectionNode.setSourceID(gotoNodes.get(seriaConnection.getSource()));
-			connectionNode.setTargetID(flowNodes.get(seriaConnection.getTarget()));
+			connectionNode.setTarget(flowNodes.get(seriaConnection.getTarget()));
 
 			connectionNode.setParent(target);
 
@@ -90,7 +90,7 @@ public class SerializeUtil {
 
 						// 此时gotoNode才有parent
 						if (connectionNode != null) {
-							connectionNode.setSourceID(go);
+							connectionNode.setSource(go);
 						}
 						return go;
 					})
@@ -156,8 +156,8 @@ public class SerializeUtil {
 					SerializeConnectionNode seriaConnectionNode = new SerializeConnectionNode();
 
 					seriaConnectionNode.setId(connectionNode.getId());
-					seriaConnectionNode.setSource(connectionNode.getSourceID().getId());
-					seriaConnectionNode.setTarget(connectionNode.getTargetID().getId());
+					seriaConnectionNode.setSource(connectionNode.getSource().getId());
+					seriaConnectionNode.setTarget(connectionNode.getTarget().getId());
 
 					return seriaConnectionNode;
 				})

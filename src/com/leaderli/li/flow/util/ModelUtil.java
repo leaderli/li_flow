@@ -2,42 +2,22 @@ package com.leaderli.li.flow.util;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.jface.dialogs.IMessageProvider;
 
 import com.leaderli.li.flow.LiPlugin;
 import com.leaderli.li.flow.dialog.WizardPageCommand;
-import com.leaderli.li.flow.editor.FlowEditor;
 import com.leaderli.li.flow.editor.command.FlowNodeRenameCommand;
 import com.leaderli.li.flow.editor.command.ModelCommand;
 import com.leaderli.li.flow.editor.model.ConnectionNode;
 import com.leaderli.li.flow.editor.model.FlowDiagram;
 import com.leaderli.li.flow.editor.model.FlowNode;
 import com.leaderli.li.flow.editor.model.GotoNode;
-import com.leaderli.li.flow.editor.model.Node;
-import com.leaderli.li.flow.editor.model.NodeNotify;
 
 public class ModelUtil {
 
-	public static FlowEditor getFlowEditor(NodeNotify model) {
-		while (model instanceof Node) {
-			model = ((Node<?>) model).getParent();
-		}
-		if (model instanceof FlowDiagram) {
-			return ((FlowDiagram) model).getEditor();
-		}
-		return null;
-	}
 
-	public static void referToEachOther(Object model, EditPart editPart) {
-		if (editPart != null) {
-			editPart.setModel(model);
-			if (model instanceof Node) {
-				((Node<?>) model).setEditPart(editPart);
-			}
-		}
-	}
+
 
 	public static IStatus validateFlowNodeName(FlowNode flowNode, String name) {
 
@@ -105,7 +85,7 @@ public class ModelUtil {
 		if (connectionNode == null) {
 			return null;
 		}
-		FlowNode target = connectionNode.getTargetFlowNodeID();
+		FlowNode target = connectionNode.getTarget();
 		return target;
 	}
 

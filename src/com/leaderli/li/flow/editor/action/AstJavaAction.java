@@ -27,9 +27,11 @@ import org.eclipse.jdt.core.dom.Name;
 
 import com.leaderli.li.flow.LiPlugin;
 import com.leaderli.li.flow.constant.PluginConstant;
+import com.leaderli.li.flow.editor.FlowEditor;
 import com.leaderli.li.flow.editor.model.FlowNode;
+import com.leaderli.li.flow.editor.part.FlowNodeEditPart;
 
-public class AstJavaAction extends SelectionContextMenuAction<FlowNode> {
+public class AstJavaAction extends SelectionContextMenuAction<FlowNode, FlowEditor, FlowNodeEditPart> {
 
 	public AstJavaAction() {
 		setId("ast");

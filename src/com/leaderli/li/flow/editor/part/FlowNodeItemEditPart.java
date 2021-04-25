@@ -9,12 +9,12 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.gef.EditPolicy;
 
-import com.leaderli.li.flow.adapter.Notify;
+import com.leaderli.li.flow.editor.FlowNodeObejctTreeEditor;
 import com.leaderli.li.flow.editor.model.FlowNode;
 import com.leaderli.li.flow.editor.model.GotoNode;
 import com.leaderli.li.flow.editor.policy.FlowNodeItemXYLayoutPolicy;
 
-public class FlowNodeItemEditPart extends GenericsEditPart<FlowNode> {
+public class FlowNodeItemEditPart extends GenericsEditPart<FlowNode, FlowNodeObejctTreeEditor> {
 
 	@Override
 	protected IFigure createFigure() {
@@ -48,13 +48,7 @@ public class FlowNodeItemEditPart extends GenericsEditPart<FlowNode> {
 	}
 	@Override
 	protected void initAfterSetModel() {
-		addNotify(new Notify() {
-
-			@Override
-			public void notifyChanged(int typeRole, String oldVal, String newVal) {
-				refreshChildren();
-			}
-		});
+		addNotifyListener(() -> refreshChildren());
 	}
 
 

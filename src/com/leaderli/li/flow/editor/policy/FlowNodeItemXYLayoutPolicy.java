@@ -1,16 +1,17 @@
 package com.leaderli.li.flow.editor.policy;
 
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.jface.dialogs.IMessageProvider;
 
 import com.leaderli.li.flow.dialog.WizardPageCommand;
+import com.leaderli.li.flow.editor.FlowNodeObejctTreeEditor;
 import com.leaderli.li.flow.editor.command.GotoNodeCreateCommand;
 import com.leaderli.li.flow.editor.model.FlowNode;
 import com.leaderli.li.flow.editor.model.GotoNode;
+import com.leaderli.li.flow.editor.part.FlowNodeItemEditPart;
 
-public class FlowNodeItemXYLayoutPolicy extends XYLayoutEditPolicy {
+public class FlowNodeItemXYLayoutPolicy extends GenericsXYLayoutEditPolicy<FlowNode, FlowNodeObejctTreeEditor, FlowNodeItemEditPart> {
 
 
 
@@ -33,10 +34,11 @@ public class FlowNodeItemXYLayoutPolicy extends XYLayoutEditPolicy {
 
 		GotoNodeCreateCommand command = new GotoNodeCreateCommand();
 		GotoNode model = (GotoNode) request.getNewObject();
-		FlowNode flowNode = (FlowNode) getHost().getModel();
+		FlowNode flowNode = getModel();
 
 		command.setModel(model);
 		command.setParent(flowNode);
+		command.setEditor(getEditor());
 
 		WizardPageCommand<GotoNode, FlowNode> commandWrapper = new WizardPageCommand<GotoNode, FlowNode>(command,
 				"create a new GotoNode", "new GotoNode", model.getName()) {
@@ -48,7 +50,7 @@ public class FlowNodeItemXYLayoutPolicy extends XYLayoutEditPolicy {
 				}
 				setMessage("", IMessageProvider.NONE);
 				if (flowNode.getGotoNodes().stream().anyMatch(aGoto -> getPageText().equals(aGoto.getName()))) {
-					this.setMessage("node " + getPageText() + " already exist", IMessageProvider.ERROR);
+					setMessage("node " + getPageText() + " already exist", IMessageProvider.ERROR);
 					return;
 
 				}

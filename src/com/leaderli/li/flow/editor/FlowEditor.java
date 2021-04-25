@@ -5,10 +5,8 @@ import java.io.InputStream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 import org.eclipse.gef.GraphicalViewer;
@@ -18,23 +16,18 @@ import org.eclipse.gef.dnd.TemplateTransferDropTargetListener;
 import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.ui.palette.PaletteViewer;
-import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
 
-import com.leaderli.li.flow.LiPlugin;
 import com.leaderli.li.flow.editor.action.AstJavaAction;
 import com.leaderli.li.flow.editor.action.EditRelateJavaAction;
 import com.leaderli.li.flow.editor.action.SelectionContextMenuAction;
@@ -45,21 +38,21 @@ import com.leaderli.li.flow.editor.model.GotoNode;
 import com.leaderli.li.flow.editor.part.ConnectionNodeEditPart;
 import com.leaderli.li.flow.editor.part.EditPartFactoryUtil;
 import com.leaderli.li.flow.editor.part.FlowDiagramEditPart;
+import com.leaderli.li.flow.editor.part.FlowEditorProvider;
+import com.leaderli.li.flow.editor.part.GenericsEditPart;
 import com.leaderli.li.flow.editor.part.GotoNodeEditPart;
 import com.leaderli.li.flow.editor.serialize.SerializeFlowDiagram;
 import com.leaderli.li.flow.editor.serialize.SerializeUtil;
 import com.leaderli.li.flow.image.TabImageProvider;
 import com.leaderli.li.flow.util.GsonUtil;
-import com.leaderli.li.flow.util.ModelUtil;
 
 /**
  * 
  * 编辑器的入口
  *
  */
-public class FlowEditor extends GraphicalEditorWithFlyoutPalette {
+public class FlowEditor extends BaseGraphicalEditorWithFlyoutPalette {
 
-	private IFile flowFile;
 	private FlowEditorPaletteRoot palette;
 
 	public FlowEditor() {
@@ -72,7 +65,7 @@ public class FlowEditor extends GraphicalEditorWithFlyoutPalette {
 	protected PaletteRoot getPaletteRoot() {
 		if (palette == null) {
 
-			palette = new FlowEditorPaletteRoot(getProject());
+			palette = new FlowEditorPaletteRoot();
 		}
 		return palette.getPaletteRoot();
 	}
@@ -113,30 +106,18 @@ public class FlowEditor extends GraphicalEditorWithFlyoutPalette {
 //		super.commandStackChanged(event);
 //	}
 
-	@Override
-	public void init(IEditorSite site, IEditorInput editorInput) throws PartInitException {
 
-		Assert.isTrue(editorInput instanceof IFileEditorInput, "Invalid Input: Must be IFileEditorInput");
-		flowFile = ((IFileEditorInput) editorInput).getFile();
-		LiPlugin.getDefault().getCallflowController().init(flowFile.getProject());
-		setEditDomain(new DefaultEditDomain(this));
-		super.init(site, editorInput);
-		// 编辑器的标题
-		this.setPartName(editorInput);
-
-	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
 	}
 
-	private void setPartName(IEditorInput editorInput) {
-		// 获取打开的文件
-		IFile inputFile = ((IFileEditorInput) editorInput).getFile();
+	@Override
+	protected void setPartName(IFile inputFile) {
 		// 拼接 项目名和文件名
-		String title = inputFile.getProject().getName() + "[" + inputFile.getName() + "]";
-		this.setPartName(title);
+		String title = getProject().getName() + "[" + inputFile.getName() + "]";
+		setPartName(title);
 	}
 
 	@Override
@@ -163,15 +144,8 @@ public class FlowEditor extends GraphicalEditorWithFlyoutPalette {
 		return null;
 	}
 
-	public IFile getFile() {
 
-		return flowFile;
-	}
 
-	public IProject getProject() {
-
-		return getFile().getProject();
-	}
 
 	/**
 	 * 扩大访问权限
@@ -181,16 +155,10 @@ public class FlowEditor extends GraphicalEditorWithFlyoutPalette {
 		return super.getGraphicalViewer();
 	}
 
-	/**
-	 * 扩大访问权限
-	 */
-	@Override
-	public DefaultEditDomain getEditDomain() {
-		return super.getEditDomain();
-	}
 
 	private EditPartFactory editPartFactory;
 
+	@SuppressWarnings("unchecked")
 	private EditPartFactory getEditPartFactory() {
 		if (editPartFactory == null) {
 			editPartFactory = (part, model) -> {
@@ -200,18 +168,17 @@ public class FlowEditor extends GraphicalEditorWithFlyoutPalette {
 					editPart = new ConnectionNodeEditPart();
 				} else if (model instanceof FlowDiagram) {
 					editPart = new FlowDiagramEditPart();
-					((FlowDiagram) model).setEditor(FlowEditor.this);
-
 				} else if (model instanceof GotoNode) {
 					editPart = new GotoNodeEditPart();
-
 				} else if (model instanceof FlowNode) {
 					String type = ((FlowNode) model).getType();
 					editPart = EditPartFactoryUtil.getFlowNodeEditPartByType(type);
 				}
 
-				ModelUtil.referToEachOther(model, editPart);
-
+				if (editPart instanceof FlowEditorProvider) {
+					((FlowEditorProvider<FlowEditor>) editPart).setEditor(FlowEditor.this);
+					editPart.setModel(model);
+				}
 				return editPart;
 			};
 
@@ -223,7 +190,7 @@ public class FlowEditor extends GraphicalEditorWithFlyoutPalette {
 	protected void configureGraphicalViewer() {
 
 		super.configureGraphicalViewer();
-		FlowEditor editor = this;
+		BaseGraphicalEditorWithFlyoutPalette editor = this;
 		GraphicalViewer graphicalViewer = getGraphicalViewer();
 		graphicalViewer.setEditPartFactory(getEditPartFactory());
 		graphicalViewer.addDropTargetListener(new TemplateTransferDropTargetListener(graphicalViewer));
@@ -250,9 +217,9 @@ public class FlowEditor extends GraphicalEditorWithFlyoutPalette {
 		super.createActions();
 	}
 
-	private void createSelectionContextMenuAction(Class<? extends SelectionContextMenuAction<?>> actionClass) {
+	private void createSelectionContextMenuAction(Class<? extends SelectionContextMenuAction<?, FlowEditor, ? extends GenericsEditPart<?, FlowEditor>>> actionClass) {
 		try {
-			SelectionContextMenuAction<?> action = actionClass.newInstance();
+			SelectionContextMenuAction<?, ?, ? extends GenericsEditPart<?, FlowEditor>> action = actionClass.newInstance();
 			action.setWorkbenchPart(this);
 			getActionRegistry().registerAction(action);
 		} catch (Exception e) {

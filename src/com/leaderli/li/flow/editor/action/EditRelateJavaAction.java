@@ -6,22 +6,24 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 
+import com.leaderli.li.flow.editor.FlowEditor;
 import com.leaderli.li.flow.editor.model.FlowNode;
+import com.leaderli.li.flow.editor.part.FlowNodeEditPart;
 
-public class EditRelateJavaAction extends SelectionContextMenuAction<FlowNode> {
+public class EditRelateJavaAction extends SelectionContextMenuAction<FlowNode, FlowEditor, FlowNodeEditPart> {
 
 	public static final String EIDT_RELATE_JAVA = "EditRelateJavaAction";
 
 	public EditRelateJavaAction() {
-		this.setId(EditRelateJavaAction.EIDT_RELATE_JAVA);
-		this.setText("Edit");
+		setId(EditRelateJavaAction.EIDT_RELATE_JAVA);
+		setText("Edit");
 
 	}
 
 	@Override
 	public void run() {
 
-		IFile iFile = (IFile) this.editPart.getAdapter(IFile.class);
+		IFile iFile = (IFile) editPart.getAdapter(IFile.class);
 
 		try {
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();

@@ -4,17 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.gef.EditPartListener;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
-import com.leaderli.li.flow.adapter.Notify;
+import com.leaderli.li.flow.editor.BaseGraphicalEditorWithFlyoutPalette;
 import com.leaderli.li.flow.editor.model.NodeNotify;
-import com.leaderli.li.flow.util.ModelUtil;
+import com.leaderli.li.flow.listener.NotifyListener;
 
-public abstract class GenericsEditPart<T extends NodeNotify> extends AbstractGraphicalEditPart {
+public abstract class GenericsEditPart<T extends NodeNotify, F extends BaseGraphicalEditorWithFlyoutPalette> extends AbstractGraphicalEditPart implements FlowEditorProvider<F> {
+
+
+	protected F editor;
 
 
 
+	@Override
+	public F getEditor() {
+		return this.editor;
+	}
+
+	@Override
+	public void setEditor(F flowEditor) {
+		this.editor = flowEditor;
+	}
 
 	public GenericsEditPart() {
 		super();
@@ -36,28 +47,22 @@ public abstract class GenericsEditPart<T extends NodeNotify> extends AbstractGra
 		return (T) super.getModel();
 	}
 
-	private List<Notify> notifys = new ArrayList<Notify>();
+	/**
+	 * 
+	 */
+	private List<NotifyListener<?>> editPartNotifyListeners = new ArrayList<>();
 
 
-	protected void addNotify(Notify notify) {
-		this.notifys.add(notify);
+	protected void addNotifyListener(NotifyListener<?> notify) {
+		this.editPartNotifyListeners.add(notify);
 	}
-//	@Override
-//	public void notifyChanged() {
-//
-//	}
-
-//	@Override
-//	public boolean isAdapterForType(Object adapter) {
-//		return adapter == getModel();
-//	}
 	/**
 	 * 元素绘制时触发
 	 */
 	@Override
 	public void activate() {
 		if (!isActive()) {
-			this.notifys.forEach(getModel()::addNotify);
+			this.editPartNotifyListeners.forEach(getModel()::addNotify);
 		}
 		super.activate();
 	}
@@ -68,7 +73,7 @@ public abstract class GenericsEditPart<T extends NodeNotify> extends AbstractGra
 	@Override
 	public void deactivate() {
 		if (isActive()) {
-			this.notifys.forEach(getModel()::removeNotify);
+			this.editPartNotifyListeners.forEach(getModel()::removeNotify);
 		}
 		super.deactivate();
 	}
@@ -84,13 +89,9 @@ public abstract class GenericsEditPart<T extends NodeNotify> extends AbstractGra
 	}
 
 
-	@Override
-	public void addEditPartListener(EditPartListener listener) {
-		super.addEditPartListener(listener);
-	}
 
 	public IProject getProject() {
-		return ModelUtil.getFlowEditor(getModel()).getProject();
+		return this.editor.getProject();
 	}
 
 }

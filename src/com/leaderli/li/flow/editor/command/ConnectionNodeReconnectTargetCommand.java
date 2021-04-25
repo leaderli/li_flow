@@ -14,9 +14,9 @@ public class ConnectionNodeReconnectTargetCommand extends ModelCommand<Connectio
 	public void execute() {
 
 		if (oldTarget == null) {
-			oldTarget = getModel().getTargetID();
+			oldTarget = getModel().getTarget();
 		}
-		getModel().setTargetID(newTarget);
+		getModel().setTarget(newTarget);
 		
 		getModel().notifyChanged();
 
@@ -24,7 +24,7 @@ public class ConnectionNodeReconnectTargetCommand extends ModelCommand<Connectio
 
 	@Override
 	public void undo() {
-		getModel().setTargetID(oldTarget);
+		getModel().setTarget(oldTarget);
 		getModel().notifyChanged();
 
 	}

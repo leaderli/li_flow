@@ -23,9 +23,7 @@ import com.leaderli.li.flow.util.ResourcesUtil;
 
 public class CallflowController implements IResourceChangeListener {
 
-	public void init(IProject project) {
 
-	}
 
 	private void invalidateResourceCache() {
 	}

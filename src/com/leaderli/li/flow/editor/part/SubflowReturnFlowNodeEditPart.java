@@ -1,18 +1,18 @@
 package com.leaderli.li.flow.editor.part;
 
-import com.leaderli.li.flow.adapter.Notify;
+import com.leaderli.li.flow.listener.DefaultTypeNotifyListener;
 
 public class SubflowReturnFlowNodeEditPart extends FlowNodeEditPart {
 	@Override
 	protected void initAfterSetModel() {
 		super.initAfterSetModel();
-		this.addNotify(new RenameSubflowReturnFlowNodeAdapter());
+		this.addNotifyListener(new RenameSubflowReturnFlowNodeAdapter());
 	}
 
-	private class RenameSubflowReturnFlowNodeAdapter implements Notify {
+	private class RenameSubflowReturnFlowNodeAdapter implements DefaultTypeNotifyListener {
 
 		@Override
-		public void notifyChanged(int typeRole, String oldVal, String newVal) {
+		public void notifyChanged() {
 //			List<IFile> flows = LiPlugin.getDefault().getCallflowController().getProjectFlowFiles(getProject());
 //			flows.forEach(flow -> {
 //

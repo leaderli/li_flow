@@ -1,82 +1,42 @@
 package com.leaderli.li.flow.editor.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ConnectionNode extends Node<FlowDiagram> {
 
-	private GotoNode sourceID;
-	private FlowNode targetID;
-	private FlowNode sourceFlowNodeID;
-	private FlowNode targetFlowNodeID;
+	private GotoNode source;
+	private FlowNode target;
+	private FlowNode sourceFlowNode;
 
-	private List<Location> bendpoints;
-
-	public GotoNode getSourceID() {
-		return sourceID;
+	public GotoNode getSource() {
+		return source;
 	}
 
-	public void setSourceID(GotoNode sourceID) {
-		this.sourceID = sourceID;
-		sourceFlowNodeID = sourceID.getParent();
-
+	public void setSource(GotoNode source) {
+		this.source = source;
+		sourceFlowNode = source.getParent();
 	}
 
-	public FlowNode getSourceFlowNodeID() {
-		return sourceFlowNodeID;
+	public FlowNode getSourceFlowNode() {
+		return sourceFlowNode;
 	}
 
-
-	public FlowNode getTargetID() {
-		return targetID;
+	public FlowNode getTarget() {
+		return target;
 	}
 
-	public void setTargetID(FlowNode targetID) {
-		this.targetID = targetID;
-		targetFlowNodeID = this.targetID;
-	}
-
-	public FlowNode getTargetFlowNodeID() {
-		return targetFlowNodeID;
-	}
-
-
-
-
-	public List<Location> getBendpoints() {
-		if (bendpoints == null) {
-			bendpoints = new ArrayList<>();
+	public void setTarget(FlowNode target) {
+		if (source != null) {
+			source.notifyChanged(GOTO_TYPE | CONNECTION_TARGET_ROLE, target, this.target);
 		}
-		return bendpoints;
-	}
-
-	public void setBendpoints(List<Location> bendPoints) {
-		bendpoints = bendPoints;
-	}
-
-	public void addBendpoint(int index, Location location) {
-		getBendpoints().add(index, location);
-	}
-
-	public void removeBendpoint(int index) {
-		getBendpoints().remove(index);
-	}
-
-	public void updateBendpoint(int index, Location location) {
-		getBendpoints().set(index, location);
-	}
-
-	public Location getBendpoint(int index) {
-		return getBendpoints().get(index);
+		this.target = target;
 	}
 
 	@Override
 	public void notifyChanged() {
-		if (sourceID != null) {
-			sourceID.notifyChanged(GOTO_TYPE | CONNECTION_SOURCE_ROLE);
+		if (source != null) {
+			source.notifyChanged(GOTO_TYPE | CONNECTION_SOURCE_ROLE);
 		}
-		if (targetID != null) {
-			targetID.notifyChanged(FLOW_TYPE | CONNECTION_TARGET_ROLE);
+		if (target != null) {
+			target.notifyChanged(FLOW_TYPE | CONNECTION_TARGET_ROLE);
 		}
 	}
 

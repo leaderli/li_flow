@@ -33,9 +33,9 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
 import com.leaderli.li.flow.LiPlugin;
-import com.leaderli.li.flow.adapter.Notify;
 import com.leaderli.li.flow.constant.PluginConstant;
 import com.leaderli.li.flow.editor.CallFlowEditor;
+import com.leaderli.li.flow.editor.FlowEditor;
 import com.leaderli.li.flow.editor.model.ConnectionNode;
 import com.leaderli.li.flow.editor.model.FlowNode;
 import com.leaderli.li.flow.editor.model.GotoNode;
@@ -45,6 +45,7 @@ import com.leaderli.li.flow.editor.policy.FlowNodeComponentEditPolicy;
 import com.leaderli.li.flow.editor.policy.FlowNodeGraphicalNodeEditPolicy;
 import com.leaderli.li.flow.generate.GenerateFromTemplate;
 import com.leaderli.li.flow.generate.GenerateFromTemplate.Builder;
+import com.leaderli.li.flow.listener.DefaultTypeNotifyListener;
 import com.leaderli.li.flow.generate.ModifyJava;
 import com.leaderli.li.flow.ui.GenericsPropertySource;
 import com.leaderli.li.flow.ui.ModelPropertyDescriptor;
@@ -54,7 +55,7 @@ import com.leaderli.li.flow.util.ImageUtil;
 import com.leaderli.li.flow.util.ModelUtil;
 import com.leaderli.li.flow.util.ResourcesUtil;
 
-public class FlowNodeEditPart extends GenericsEditPart<FlowNode> implements NodeEditPart, IMultiPageEditPart, ModelRole {
+public class FlowNodeEditPart extends GenericsEditPart<FlowNode, FlowEditor> implements NodeEditPart, IMultiPageEditPart, ModelRole {
 
 	public static final String FLOWNODE_OPEN_ROLE = "flowNodeOpen";
 
@@ -155,7 +156,7 @@ public class FlowNodeEditPart extends GenericsEditPart<FlowNode> implements Node
 	@Override
 	protected List<ConnectionNode> getModelTargetConnections() {
 		List<ConnectionNode> connectionNodes = ((FlowDiagramEditPart) getParent()).getModel().getConnectionNodes();
-		return connectionNodes.stream().filter(connectionNode -> getModel() == connectionNode.getTargetID())
+		return connectionNodes.stream().filter(connectionNode -> getModel() == connectionNode.getTarget())
 				.collect(Collectors.toList());
 	}
 
@@ -259,17 +260,17 @@ public class FlowNodeEditPart extends GenericsEditPart<FlowNode> implements Node
 
 		List<String> subFlowNames = new ArrayList<>(
 				LiPlugin.getDefault().getCallflowController().getSubFlowNames(getProject()));
-		subFlowNames.remove(ResourcesUtil.getFileSimpleName(getModel().getParent().getEditor().getFile()));
+		subFlowNames.remove(ResourcesUtil.getFileSimpleName(getEditor().getFile()));
 		return subFlowNames.stream().toArray(len -> new String[len]);
 	}
 
 	@Override
 	protected void initAfterSetModel() {
-		this.addNotify(new RenameFlowNodeAdapter());
-		this.addNotify(new MoveFlowNodeAdapter());
-		this.addNotify(new ConnectionTargetFlowNodeAdapter());
-		this.addNotify(new ModifyFlowNodeChildAdapter());
-		this.addNotify(new ModifyJavaAdapter());
+		this.addNotifyListener(new RenameFlowNodeAdapter());
+		this.addNotifyListener(new MoveFlowNodeAdapter());
+		this.addNotifyListener(new ConnectionTargetFlowNodeAdapter());
+		this.addNotifyListener(new ModifyFlowNodeChildAdapter());
+		this.addNotifyListener(new ModifyJavaAdapter());
 
 		propertySource = new GenericsPropertySource<>();
 
@@ -289,7 +290,7 @@ public class FlowNodeEditPart extends GenericsEditPart<FlowNode> implements Node
 			if (StringUtils.equals(model.getType(), PluginConstant.TYPE_SUBFLOW_ENTRY)) {
 				return;
 			}
-			ModelUtil.openRenameFLowNodeWizard(model, model.getParent().getEditor().getCommandStack(), newName);
+			ModelUtil.openRenameFLowNodeWizard(model, getEditor().getCommandStack(), newName);
 		}
 
 		@Override
@@ -299,10 +300,10 @@ public class FlowNodeEditPart extends GenericsEditPart<FlowNode> implements Node
 
 	}
 
-	private class RenameFlowNodeAdapter implements Notify {
+	private class RenameFlowNodeAdapter implements DefaultTypeNotifyListener {
 
 		@Override
-		public void notifyChanged(int typeRole, String oldVal, String newVal) {
+		public void notifyChanged() {
 
 			IFile java = getJavaFile();
 			Assert.isNotNull(java, "");
@@ -319,10 +320,10 @@ public class FlowNodeEditPart extends GenericsEditPart<FlowNode> implements Node
 		}
 	}
 
-	private class MoveFlowNodeAdapter implements Notify {
+	private class MoveFlowNodeAdapter implements DefaultTypeNotifyListener {
 
 		@Override
-		public void notifyChanged(int typeRole, String oldVal, String newVal) {
+		public void notifyChanged() {
 			refreshVisuals();
 
 		}
@@ -333,10 +334,10 @@ public class FlowNodeEditPart extends GenericsEditPart<FlowNode> implements Node
 		}
 	}
 
-	private class ConnectionTargetFlowNodeAdapter implements Notify {
+	private class ConnectionTargetFlowNodeAdapter implements DefaultTypeNotifyListener {
 
 		@Override
-		public void notifyChanged(int typeRole, String oldVal, String newVal) {
+		public void notifyChanged() {
 			refreshTargetConnections();
 		}
 
@@ -347,10 +348,10 @@ public class FlowNodeEditPart extends GenericsEditPart<FlowNode> implements Node
 
 	}
 
-	private class ModifyFlowNodeChildAdapter implements Notify {
+	private class ModifyFlowNodeChildAdapter implements DefaultTypeNotifyListener {
 
 		@Override
-		public void notifyChanged(int typeRole, String oldVal, String newVal) {
+		public void notifyChanged() {
 			refreshChildren();
 			try {
 				modifyJava();
@@ -368,10 +369,10 @@ public class FlowNodeEditPart extends GenericsEditPart<FlowNode> implements Node
 
 	}
 
-	private class ModifyJavaAdapter implements Notify {
+	private class ModifyJavaAdapter implements DefaultTypeNotifyListener {
 
 		@Override
-		public void notifyChanged(int typeRole, String oldVal, String newVal) {
+		public void notifyChanged() {
 			try {
 				modifyJava();
 			} catch (Exception e) {

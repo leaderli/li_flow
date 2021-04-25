@@ -3,21 +3,22 @@ package com.leaderli.li.flow.editor.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.leaderli.li.flow.adapter.Notify;
+import com.leaderli.li.flow.listener.NotifyListener;
 
+@SuppressWarnings("rawtypes")
 public class NodeNotify implements ModelRole {
 
-	private transient List<Notify> notifys = new ArrayList<>();
+	private transient List<NotifyListener> notifys = new ArrayList<>();
 
 	public NodeNotify() {
 		super();
 	}
 
-	public void addNotify(Notify notify) {
+	public void addNotify(NotifyListener notify) {
 		notifys.add(notify);
 	}
 
-	public void removeNotify(Notify notify) {
+	public void removeNotify(NotifyListener notify) {
 		notifys.remove(notify);
 	}
 
@@ -28,11 +29,13 @@ public class NodeNotify implements ModelRole {
 	public void notifyChanged(int typeRole) {
 		this.notifyChanged(typeRole, "", "");
 	}
-	public void notifyChanged(int typeRole, String oldVal, String newVal) {
+
+	@SuppressWarnings("unchecked")
+	public <T> void notifyChanged(int typeRole, T oldVal, T newVal) {
 		notifys.stream()
 				.filter(notify -> notify.canNotifyForModel(this) && ModelRole.isTypeRole(notify.typeAndRole(), typeRole))
 				.forEach(notify -> {
-					notify.notifyChanged(typeRole, oldVal, newVal);
+					notify.notifyChanged(oldVal, newVal);
 				});
 	}
 

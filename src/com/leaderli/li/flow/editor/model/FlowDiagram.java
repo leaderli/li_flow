@@ -3,16 +3,12 @@ package com.leaderli.li.flow.editor.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.leaderli.li.flow.editor.FlowEditor;
-
 public class FlowDiagram extends NodeNotify {
 
 	private String packageName;
 	private int nextNodeID;
 	private List<FlowNode> flowNodes = new ArrayList<>();
 	private List<ConnectionNode> connectionNodes = new ArrayList<>();
-
-	private transient FlowEditor editor;
 
 	public String getPackageName() {
 		return packageName;
@@ -50,6 +46,14 @@ public class FlowDiagram extends NodeNotify {
 
 	}
 
+	public List<ConnectionNode> getConnectionNodes() {
+		return connectionNodes;
+	}
+
+	public void setConnectionNodes(List<ConnectionNode> connectionNodes) {
+		this.connectionNodes = connectionNodes;
+	}
+
 	public void addFlowNode(FlowNode flowNode) {
 		flowNodes.add(flowNode);
 		flowNode.setParent(this);
@@ -61,22 +65,15 @@ public class FlowDiagram extends NodeNotify {
 		this.notifyChanged();
 	}
 
-	public List<ConnectionNode> getConnectionNodes() {
-		return connectionNodes;
-	}
-
-	public void setConnectionNodes(List<ConnectionNode> connectionNodes) {
-		this.connectionNodes = connectionNodes;
-	}
 
 	public void addConnectionNode(ConnectionNode connection) {
 
 		connectionNodes.add(connection);
+		connection.setParent(this);
 
-		GotoNode source = connection.getSourceID();
+		GotoNode source = connection.getSource();
 		source.setLinkedConnectionNode(connection);
 		connection.notifyChanged();
-		this.notifyChanged();
 
 	}
 
@@ -84,21 +81,13 @@ public class FlowDiagram extends NodeNotify {
 
 		connectionNodes.remove(connection);
 
-		GotoNode source = connection.getSourceID();
+		GotoNode source = connection.getSource();
 		if (source != null) {
 			source.setLinkedConnectionNode(null);
 		}
 		connection.notifyChanged();
-		this.notifyChanged();
 	}
 
 
-	public void setEditor(FlowEditor editor) {
-		this.editor = editor;
-	}
-
-	public FlowEditor getEditor() {
-		return editor;
-	}
 
 }

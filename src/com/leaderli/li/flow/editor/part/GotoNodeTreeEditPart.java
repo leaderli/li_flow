@@ -10,13 +10,14 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.swt.graphics.Image;
 
 import com.leaderli.li.flow.constant.PluginConstant;
+import com.leaderli.li.flow.editor.FlowNodeObejctTreeEditor;
 import com.leaderli.li.flow.editor.model.ConnectionNode;
 import com.leaderli.li.flow.editor.model.FlowDiagram;
 import com.leaderli.li.flow.editor.model.GotoNode;
 import com.leaderli.li.flow.editor.policy.GotoNodeComponentEditPolicy;
 import com.leaderli.li.flow.util.ImageUtil;
 
-public class GotoNodeTreeEditPart extends GenericsEditPart<GotoNode> {
+public class GotoNodeTreeEditPart extends GenericsEditPart<GotoNode, FlowNodeObejctTreeEditor> {
 	protected Image getImage() {
 		return ImageUtil.getImage("goto.gif");
 	}
@@ -28,7 +29,7 @@ public class GotoNodeTreeEditPart extends GenericsEditPart<GotoNode> {
 		ConnectionNode connectionNode = gotoNode.getLinkedConnectionNode();
 		String next = "not set ";
 		if (connectionNode != null) {
-			next = connectionNode.getTargetFlowNodeID().getName();
+			next = connectionNode.getTarget().getName();
 		}
 		return "Goto <name=\"" + gotoNode.getName() + "\", next=\"" + next + "\">";
 	}

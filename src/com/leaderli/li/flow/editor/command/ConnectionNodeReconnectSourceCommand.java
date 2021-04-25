@@ -14,9 +14,9 @@ public class ConnectionNodeReconnectSourceCommand extends ModelCommand<Connectio
 	public void execute() {
 
 		if (oldSource == null) {
-			oldSource = getModel().getSourceID();
+			oldSource = getModel().getSource();
 		}
-		getModel().setSourceID(newSource);
+		getModel().setSource(newSource);
 		newSource.setLinkedConnectionNode(getModel());
 		oldSource.setLinkedConnectionNode(null);
 		
@@ -26,7 +26,7 @@ public class ConnectionNodeReconnectSourceCommand extends ModelCommand<Connectio
 
 	@Override
 	public void undo() {
-		getModel().setSourceID(oldSource);
+		getModel().setSource(oldSource);
 		oldSource.setLinkedConnectionNode(getModel());
 		newSource.setLinkedConnectionNode(null);
 

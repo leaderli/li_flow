@@ -1,6 +1,5 @@
 package com.leaderli.li.flow.editor;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.gef.palette.CombinedTemplateCreationEntry;
 import org.eclipse.gef.palette.ConnectionCreationToolEntry;
 import org.eclipse.gef.palette.CreationToolEntry;
@@ -34,23 +33,23 @@ public class FlowEditorPaletteRoot {
 		return selectionTool;
 	}
 
-	public FlowEditorPaletteRoot(IProject project) {
+	public FlowEditorPaletteRoot() {
 
-		this.paletteRoot = new PaletteRoot();
-		this.selectionTool = new SelectionToolEntry();
-		this.paletteRoot.setDefaultEntry(this.selectionTool);
+		paletteRoot = new PaletteRoot();
+		selectionTool = new SelectionToolEntry();
+		paletteRoot.setDefaultEntry(selectionTool);
 
-		this.connectionTool = new ConnectionCreationToolEntry("connection", "Create Connection between nodes",
+		connectionTool = new ConnectionCreationToolEntry("connection", "Create Connection between nodes",
 				TheFactoryOfCreationFactory.getGenericsCreationFactoryWithConsumer(ConnectionNode.class, null),
 				ImageUtil.getImageDescriptor("connection.gif"), ImageUtil.getImageDescriptor("connection.gif"));
 
-		this.connectionTool.setToolClass(KeyEnabledConnectionCreationTool.class);
+		connectionTool.setToolClass(KeyEnabledConnectionCreationTool.class);
 //		addConnection();
 		PaletteGroup group = new PaletteGroup("servlet");
-		this.paletteRoot.add(group);
+		paletteRoot.add(group);
 
-		group.add(this.selectionTool);
-		group.add(this.connectionTool);
+		group.add(selectionTool);
+		group.add(connectionTool);
 		group.add(newFlowNodeEntry(PluginConstant.ICON_SERVLET, PluginConstant.TYPE_SERVLET));
 		group.add(newFlowNodeEntry(PluginConstant.ICON_SUBFLOW_REF, PluginConstant.TYPE_SUBFLOW_REF));
 		group.add(newFlowNodeEntry(PluginConstant.ICON_SUBFLOW_RETURN, PluginConstant.TYPE_SUBFLOW_RETURN));
@@ -85,7 +84,7 @@ public class FlowEditorPaletteRoot {
 	}
 
 	public PaletteRoot getPaletteRoot() {
-		return this.paletteRoot;
+		return paletteRoot;
 	}
 
 //	private void addConnection() {
@@ -106,8 +105,8 @@ public static class KeyEnabledConnectionCreationTool extends ConnectionCreationT
 
 	@Override
 	protected boolean handleKeyUp(KeyEvent event) {
-		if (event.keyCode == FlowEditorPaletteRoot.CONNECTION_TOOL_ACTIVATE_KEY_CODE && this.getCurrentViewer().getKeyHandler() != null) {
-			this.getCurrentViewer().getKeyHandler().keyReleased(event);
+		if (event.keyCode == FlowEditorPaletteRoot.CONNECTION_TOOL_ACTIVATE_KEY_CODE && getCurrentViewer().getKeyHandler() != null) {
+			getCurrentViewer().getKeyHandler().keyReleased(event);
 		}
 		return super.handleKeyUp(event);
 

@@ -9,12 +9,13 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.gef.EditPolicy;
 
-import com.leaderli.li.flow.adapter.Notify;
+import com.leaderli.li.flow.editor.FlowEditor;
 import com.leaderli.li.flow.editor.model.FlowDiagram;
 import com.leaderli.li.flow.editor.model.FlowNode;
 import com.leaderli.li.flow.editor.policy.FlowDiagramXYLayoutPolicy;
+import com.leaderli.li.flow.listener.NotifyListener;
 
-public class FlowDiagramEditPart extends GenericsEditPart<FlowDiagram> {
+public class FlowDiagramEditPart extends GenericsEditPart<FlowDiagram, FlowEditor> {
 
 
 	@Override
@@ -36,7 +37,7 @@ public class FlowDiagramEditPart extends GenericsEditPart<FlowDiagram> {
 
 	@Override
 	protected void initAfterSetModel() {
-		addNotify(new FlowDiagramAdapter());
+		addNotifyListener(new FlowDiagramModelChildrenNotifyListener());
 	}
 
 	@Override
@@ -45,7 +46,7 @@ public class FlowDiagramEditPart extends GenericsEditPart<FlowDiagram> {
 	}
 
 	/**
-	 * 返回子Figure的父Figure，默认返回createFigure创建的Figure
+	 * 返回子Figure的父Figure，默认返回createFigure时创建的Figure, 该方法仅为编写注释而用，无实际用图
 	 */
 	@Override
 	public IFigure getContentPane() {
@@ -55,13 +56,13 @@ public class FlowDiagramEditPart extends GenericsEditPart<FlowDiagram> {
 
 
 
-	private class FlowDiagramAdapter implements Notify {
+	private class FlowDiagramModelChildrenNotifyListener implements NotifyListener<FlowNode> {
 
 		/**
-		 * 新增或删除FlowNode、ConnectionNode时，重新绘制页面
+		 * 新增或删除FlowNode时，重新绘制画布
 		 */
 		@Override
-		public void notifyChanged(int typeRole, String oldVal, String newVal) {
+		public void notifyChanged() {
 			refreshChildren();
 		}
 	}

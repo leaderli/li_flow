@@ -13,7 +13,7 @@ public class ServletFlowNodeOpenEditPolicy extends FlowEditorOpenRoleEditPolicy 
 			CallFlowEditor callFlowEditor = getCallflowEditor();
 			if (callFlowEditor != null) {
 				try {
-					callFlowEditor.openServletFlowNodeItemEditorPage(getGenericsHost().getModel(), true);
+					callFlowEditor.openServletFlowNodeItemEditorPage(getHost().getModel(), true);
 					getHost().setSelected(0);
 					getHost().getViewer().setSelection(new StructuredSelection());
 				} catch (PartInitException e) {
