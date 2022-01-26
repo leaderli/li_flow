@@ -14,8 +14,8 @@ public class SubflowRefFlowNodeOpenEditPolicy extends FlowEditorOpenRoleEditPoli
 	@Override
 	protected Runnable executor() {
 		return () -> {
-			IProject project = getGenericsHost().getProject();
-			IFile file = GEFUtil.getFlowFolder(project).getFile(getGenericsHost().getModel().getFlowName() + GEFUtil.FLOW_EXTENSION);
+			IProject project = getHost().getProject();
+			IFile file = GEFUtil.getFlowFolder(project).getFile(getHost().getModel().getFlowName() + GEFUtil.FLOW_EXTENSION);
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			try {
 				IDE.openEditor(page, file);

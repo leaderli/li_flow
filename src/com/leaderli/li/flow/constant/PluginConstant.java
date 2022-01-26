@@ -12,7 +12,10 @@ public class PluginConstant {
 	public static final int CHOPBOX_ANCHOR_TOP_RIGHT = 17;
 	public static final int CHOPBOX_ANCHOR_BOTTOM_RIGHT = 20;
 
-	public static final int NO_LINKED_CONNECTION_NODE = 0;
+//	public static final ConnectionNode NO_LINKED_CONNECTION_NODE = new ConnectionNode();
+//	static {
+//		NO_LINKED_CONNECTION_NODE.setId(0);
+//	}
 	public static final int NULL_NODE = 0;
 	
 

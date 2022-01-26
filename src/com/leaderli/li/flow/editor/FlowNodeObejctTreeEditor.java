@@ -3,14 +3,12 @@ package com.leaderli.li.flow.editor;
 import java.util.EventObject;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.dnd.TemplateTransferDragSourceListener;
 import org.eclipse.gef.dnd.TemplateTransferDropTargetListener;
 import org.eclipse.gef.palette.PaletteRoot;
-import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -20,29 +18,19 @@ import org.eclipse.ui.IWorkbenchWindow;
 
 import com.leaderli.li.flow.editor.model.FlowNode;
 import com.leaderli.li.flow.editor.model.GotoNode;
+import com.leaderli.li.flow.editor.part.FlowEditorProvider;
 import com.leaderli.li.flow.editor.part.FlowNodeItemEditPart;
 import com.leaderli.li.flow.editor.part.GotoNodeTreeEditPart;
 import com.leaderli.li.flow.image.TabImageProvider;
-import com.leaderli.li.flow.util.ModelUtil;
 
-public class FlowNodeObejctTreeEditor extends GraphicalEditorWithFlyoutPalette {
+public class FlowNodeObejctTreeEditor extends BaseGraphicalEditorWithFlyoutPalette {
 
 	private FlowNode flowNode;
 
 	public FlowNodeObejctTreeEditor() {
 		super();
-		setEditDomain(new DefaultEditDomain(this));
 	}
 
-	// @Override
-	// protected void createGraphicalViewer(Composite parent) {
-	// GraphicalTreeViewer viewer = new GraphicalTreeViewer();
-	// viewer.createControl(parent);
-	// viewer.setEditDomain(this.getEditDomain());
-	// this.setGraphicalViewer(viewer);
-	// this.configureGraphicalViewer();
-	// this.initializeGraphicalViewer();
-	// }
 
 	@Override
 	protected PaletteRoot getPaletteRoot() {
@@ -65,27 +53,28 @@ public class FlowNodeObejctTreeEditor extends GraphicalEditorWithFlyoutPalette {
 	@Override
 	protected void initializeGraphicalViewer() {
 		super.initializeGraphicalViewer();
-		this.getGraphicalViewer().setContents(flowNode);
+		getGraphicalViewer().setContents(flowNode);
 	}
 
 	private EditPartFactory editPartFactory;
 
+	@SuppressWarnings("unchecked")
 	private EditPartFactory getEditPartFactory() {
 		if (editPartFactory == null) {
-			editPartFactory = new EditPartFactory() {
-
-				@Override
-				public EditPart createEditPart(EditPart context, Object model) {
-					EditPart editPart = null;
-					if (model instanceof GotoNode) {
-						editPart = new GotoNodeTreeEditPart();
-					} else if (model instanceof FlowNode) {
-						editPart = new FlowNodeItemEditPart();
-					}
-					ModelUtil.referToEachOther(model, editPart);
-					return editPart;
+			editPartFactory = (context, model) -> {
+				EditPart editPart = null;
+				if (model instanceof GotoNode) {
+					editPart = new GotoNodeTreeEditPart();
+				} else if (model instanceof FlowNode) {
+					editPart = new FlowNodeItemEditPart();
+				}
+				
+				if (editPart instanceof FlowEditorProvider) {
+					((FlowEditorProvider<FlowNodeObejctTreeEditor>) editPart).setEditor(FlowNodeObejctTreeEditor.this);
+					editPart.setModel(model);
 				}
 
+				return editPart;
 			};
 		}
 		return editPartFactory;
@@ -126,7 +115,7 @@ public class FlowNodeObejctTreeEditor extends GraphicalEditorWithFlyoutPalette {
 
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		IWorkbenchPartSite site = this.getSite();
+		IWorkbenchPartSite site = getSite();
 		if (site != null) {
 			IWorkbenchWindow window = site.getWorkbenchWindow();
 			if (window != null) {
@@ -134,10 +123,13 @@ public class FlowNodeObejctTreeEditor extends GraphicalEditorWithFlyoutPalette {
 				if (page != null) {
 					IEditorPart editorPart = page.getActiveEditor();
 					if (editorPart != null) {
-						this.updateActions(this.getSelectionActions());
+						updateActions(getSelectionActions());
 					}
 				}
 			}
 		}
 	}
+
+
+
 }

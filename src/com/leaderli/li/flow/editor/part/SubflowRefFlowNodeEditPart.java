@@ -5,11 +5,11 @@ import java.util.List;
 import org.eclipse.ui.views.properties.ComboBoxPropertyDescriptor;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
 
-import com.leaderli.li.flow.adapter.Notify;
 import com.leaderli.li.flow.editor.model.FlowNode;
 import com.leaderli.li.flow.editor.model.GotoNode;
 import com.leaderli.li.flow.editor.policy.SubflowRefFlowNodeOpenEditPolicy;
 import com.leaderli.li.flow.generate.GenerateFromTemplate.Builder;
+import com.leaderli.li.flow.listener.DefaultTypeNotifyListener;
 import com.leaderli.li.flow.generate.GenerateMethod;
 import com.leaderli.li.flow.ui.ComboBoxPropertySourceLabelProvider;
 import com.leaderli.li.flow.ui.ModelPropertyDescriptor;
@@ -24,7 +24,7 @@ public class SubflowRefFlowNodeEditPart extends FlowNodeEditPart {
 		List<GotoNode> gotos = getModel().getGotoNodes();
 
 		if (gotos.isEmpty()) {
-			FlowNodeUtil.updateGotoNodeAfterSetFlowName(SubflowRefFlowNodeEditPart.this.getModel());
+			FlowNodeUtil.updateGotoNodeAfterSetFlowName(getProject(), SubflowRefFlowNodeEditPart.this.getModel());
 		}
 		return gotos;
 	}
@@ -38,7 +38,7 @@ public class SubflowRefFlowNodeEditPart extends FlowNodeEditPart {
 	@Override
 	protected void initAfterSetModel() {
 		super.initAfterSetModel();
-		this.addNotify(new RenameSubflowNameFlowNodeAdapter());
+		this.addNotifyListener(new RenameSubflowNameFlowNodeAdapter());
 	}
 
 	@Override
@@ -79,11 +79,11 @@ public class SubflowRefFlowNodeEditPart extends FlowNodeEditPart {
 
 	}
 
-	private class RenameSubflowNameFlowNodeAdapter implements Notify {
+	private class RenameSubflowNameFlowNodeAdapter implements DefaultTypeNotifyListener {
 
 		@Override
-		public void notifyChanged(int typeRole, String oldVal, String newVal) {
-			FlowNodeUtil.updateGotoNodeAfterSetFlowName(getModel());
+		public void notifyChanged() {
+			FlowNodeUtil.updateGotoNodeAfterSetFlowName(getProject(), getModel());
 		}
 
 		@Override

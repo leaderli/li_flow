@@ -1,20 +1,27 @@
 package com.leaderli.li.flow.editor.command;
 
-import org.eclipse.core.runtime.Assert;
-
-import com.leaderli.li.flow.editor.FlowEditor;
+import com.leaderli.li.flow.editor.BaseGraphicalEditorWithFlyoutPalette;
 import com.leaderli.li.flow.editor.model.Node;
 import com.leaderli.li.flow.editor.model.NodeNotify;
+import com.leaderli.li.flow.editor.part.FlowEditorProvider;
 
-public abstract class CommandExecuteInCommandStack<T extends Node<? extends R>, R extends NodeNotify> extends ModelCommand<T, R> {
+public abstract class CommandExecuteInCommandStack<M extends Node<? extends P>, P extends NodeNotify, F extends BaseGraphicalEditorWithFlyoutPalette> extends ModelCommand<M, P>
+		implements FlowEditorProvider<F> {
 
-	protected FlowEditor flowEditor;
-	
-	public abstract void initFlowEditor();
+	protected F editor;
+
+	@Override
+	public F getEditor() {
+		return this.editor;
+	}
+
+	@Override
+	public void setEditor(F editor) {
+		this.editor = editor;
+	}
+
 	public void dispatch() {
-		initFlowEditor();
-		Assert.isNotNull(flowEditor, "must set flowEditor");
-		flowEditor.getEditDomain().getCommandStack().execute(this);
+		editor.getEditDomain().getCommandStack().execute(this);
 	}
 
 }

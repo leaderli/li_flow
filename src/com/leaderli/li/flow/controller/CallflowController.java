@@ -16,16 +16,14 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 
 import com.leaderli.li.flow.constant.PluginConstant;
-import com.leaderli.li.flow.editor.model.FlowDiagram;
+import com.leaderli.li.flow.editor.serialize.SerializeFlowDiagram;
 import com.leaderli.li.flow.util.GEFUtil;
 import com.leaderli.li.flow.util.GsonUtil;
 import com.leaderli.li.flow.util.ResourcesUtil;
 
 public class CallflowController implements IResourceChangeListener {
 
-	public void init(IProject project) {
 
-	}
 
 	private void invalidateResourceCache() {
 	}
@@ -43,16 +41,15 @@ public class CallflowController implements IResourceChangeListener {
 	}
 
 	public List<String> getFlowSubFlowReturnNodes(IProject project, String flowName) {
-		List<String> returns = new ArrayList<String>();
+		List<String> returns = new ArrayList<>();
 		for (IFile file : getProjectFlowFiles(project)) {
-			if (ResourcesUtil.getSimpleName(file).equals(flowName)) {
+			if (ResourcesUtil.getFileSimpleName(file).equals(flowName)) {
 				try {
-					FlowDiagram flowDiagram = GsonUtil.fromJson(file.getContents(), FlowDiagram.class);
-					flowDiagram.getFlowNodes().stream()
+					SerializeFlowDiagram flowDiagram = GsonUtil.fromJson(file.getContents(), SerializeFlowDiagram.class);
+					flowDiagram.getFlowNodes()
+							.stream()
 							.filter(node -> PluginConstant.TYPE_SUBFLOW_RETURN.equals(node.getType()))
-							.forEach(node -> {
-								returns.add(node.getName());
-							});
+							.forEach(node -> returns.add(node.getName()));
 				} catch (CoreException e) {
 					e.printStackTrace();
 				}
@@ -77,7 +74,7 @@ public class CallflowController implements IResourceChangeListener {
 	}
 
 	public List<String> getSubFlowNames(IProject project) {
-		return getProjectFlowFiles(project).stream().map(f -> ResourcesUtil.getSimpleName(f)).collect(Collectors.toList());
+		return getProjectFlowFiles(project).stream().map(f -> ResourcesUtil.getFileSimpleName(f)).collect(Collectors.toList());
 	}
 
 	@Override
@@ -104,7 +101,7 @@ class Visitor implements IResourceDeltaVisitor {
 	public boolean visit(IResourceDelta delta) throws CoreException {
 
 		if (delta.getAffectedChildren(IResourceDelta.ADDED | IResourceDelta.REMOVED).length > 0) {
-			this.resourceAddedOrRemoved = true;
+			resourceAddedOrRemoved = true;
 			return false;
 		}
 		return delta.getAffectedChildren().length > 0;

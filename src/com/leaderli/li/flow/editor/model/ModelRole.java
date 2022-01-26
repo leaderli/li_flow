@@ -14,6 +14,7 @@ public interface ModelRole {
 	int CONNECTION_SOURCE_ROLE = 1 << 3;
 	int CONNECTION_TARGET_ROLE = 1 << 4;
 	int FLOW_NAME_ROLE = 1 << 5;
+	int JAVA_CODE_ROLE = 1 << 6;
 
 	int ALL_ROLE = Integer.MAX_VALUE >> 23;
 	int ALL_TYPE = Integer.MAX_VALUE >> 23 << 8;

@@ -5,7 +5,6 @@ import org.eclipse.gef.editpolicies.GraphicalNodeEditPolicy;
 import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.requests.ReconnectRequest;
 
-import com.leaderli.li.flow.constant.PluginConstant;
 import com.leaderli.li.flow.editor.command.ConnectionNodeCreateCommand;
 import com.leaderli.li.flow.editor.command.ConnectionNodeReconnectSourceCommand;
 import com.leaderli.li.flow.editor.model.ConnectionNode;
@@ -22,7 +21,7 @@ public class GotoNodeGraphicalNodeEditPolicy extends GraphicalNodeEditPolicy {
 	protected Command getConnectionCreateCommand(CreateConnectionRequest request) {
 		GotoNode gotoNode = (GotoNode) getHost().getModel();
 		// 一个出口仅允许一条线
-		if (gotoNode.getLinkedConnectionNode() != PluginConstant.NO_LINKED_CONNECTION_NODE) {
+		if (gotoNode.getLinkedConnectionNode() != null) {
 			return null;
 		}
 		ConnectionNodeCreateCommand command = new ConnectionNodeCreateCommand();
@@ -42,7 +41,7 @@ public class GotoNodeGraphicalNodeEditPolicy extends GraphicalNodeEditPolicy {
 
 		GotoNode gotoNode = (GotoNode) request.getTarget().getModel();
 		// 一个出口仅允许一条线
-		if (gotoNode.getLinkedConnectionNode() != PluginConstant.NO_LINKED_CONNECTION_NODE) {
+		if (gotoNode.getLinkedConnectionNode() != null) {
 			return null;
 		}
 		ConnectionNodeReconnectSourceCommand command = new ConnectionNodeReconnectSourceCommand();

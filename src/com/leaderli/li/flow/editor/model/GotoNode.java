@@ -3,17 +3,18 @@ package com.leaderli.li.flow.editor.model;
 public class GotoNode extends Node<FlowNode>{
 
 
-	private int linkedConnectionNode;
+	private ConnectionNode linkedConnectionNode;
 	
 	private String name;
 	
-	public int getLinkedConnectionNode() {
+	public ConnectionNode getLinkedConnectionNode() {
 		return linkedConnectionNode;
 	}
 
-	public void setLinkedConnectionNode(int linkedConnectionNode) {
+	public void setLinkedConnectionNode(ConnectionNode linkedConnectionNode) {
 		this.linkedConnectionNode = linkedConnectionNode;
 		this.notifyChanged(GOTO_TYPE | CONNECTION_SOURCE_ROLE);
+		getParent().notifyChanged(FLOW_TYPE | CHILD_ROLE);
 	}
 
 	public String getName() {

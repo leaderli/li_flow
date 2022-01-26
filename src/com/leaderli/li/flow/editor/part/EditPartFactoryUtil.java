@@ -1,15 +1,14 @@
 package com.leaderli.li.flow.editor.part;
 
-import org.eclipse.gef.EditPart;
-
 import com.leaderli.li.flow.constant.PluginConstant;
+import com.leaderli.li.flow.editor.FlowEditor;
+import com.leaderli.li.flow.editor.model.FlowNode;
 
 public class EditPartFactoryUtil {
 
+	public static GenericsEditPart<FlowNode, FlowEditor> getFlowNodeEditPartByType(String type) {
 
-
-	public static EditPart getFlowNodeEditPartByType(String type) {
-		EditPart editPart = null;
+		GenericsEditPart<FlowNode, FlowEditor> editPart = null;
 
 		switch (type) {
 		case PluginConstant.TYPE_SERVLET:

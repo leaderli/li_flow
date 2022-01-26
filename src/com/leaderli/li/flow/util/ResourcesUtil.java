@@ -38,17 +38,21 @@ import com.leaderli.li.flow.constant.PluginConstant;
 
 public class ResourcesUtil {
 
-	public static String getSimpleName(IFile f) {
-		return ResourcesUtil.getSimpleName(f.getName());
+	public static String getFileSimpleName(IFile f) {
+		return StringUtils.substringBefore(f.getName(), ".");
 	}
 
 	public static String getSimpleName(String fileName) {
 		if (StringUtils.isEmpty(fileName) || !fileName.contains(".")) {
 			return fileName;
 		}
-		return StringUtils.substringBeforeLast(fileName, ".");
+		return StringUtils.substringAfterLast(fileName, ".");
 	}
 
+
+	public static String getPackageSimpleName(String packageName) {
+		return StringUtils.substringAfterLast(packageName, ".");
+	}
 	public static String getFlowNodeSourceCodeTemplate(IProject project, String type) {
 
 		try {

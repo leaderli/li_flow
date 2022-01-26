@@ -17,6 +17,10 @@ public class GEFUtil {
 	public static final String FLOW_EXTENSION = ".li";
 	public static final String FLOW_FLODER = "flow";
 
+	/**
+	 * 
+	 * 鼠标的坐标
+	 */
 	public static Point getCursorPointAtDiagram(EditPartViewer viewer) {
 		FigureCanvas figureCanvas = (FigureCanvas) viewer.getControl();
 		Display display = LiPlugin.getStandardDisplay();

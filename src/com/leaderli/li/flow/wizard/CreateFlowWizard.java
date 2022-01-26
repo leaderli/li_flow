@@ -27,6 +27,7 @@ import com.leaderli.li.flow.editor.model.FlowDiagram;
 import com.leaderli.li.flow.editor.model.FlowNode;
 import com.leaderli.li.flow.editor.model.GotoNode;
 import com.leaderli.li.flow.editor.model.Location;
+import com.leaderli.li.flow.editor.serialize.SerializeUtil;
 import com.leaderli.li.flow.util.GEFUtil;
 import com.leaderli.li.flow.util.GsonUtil;
 
@@ -82,6 +83,7 @@ public class CreateFlowWizard extends Wizard implements INewWizard {
 
 
 	private String getFileContent(String fileName) {
+
 		FlowDiagram flowDiagram = new FlowDiagram();
 		flowDiagram.setNextNodeID(1);
 		flowDiagram.setConnectionNodes(new ArrayList<ConnectionNode>());
@@ -102,7 +104,7 @@ public class CreateFlowWizard extends Wizard implements INewWizard {
 		
 	
 		flowDiagram.addFlowNode(begin);
-		return GsonUtil.toJson(flowDiagram);
+		return GsonUtil.toJson(SerializeUtil.transfer(flowDiagram));
 	}
 
 	/**

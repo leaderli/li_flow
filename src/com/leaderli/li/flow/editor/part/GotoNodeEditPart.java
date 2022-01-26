@@ -17,16 +17,17 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
-import com.leaderli.li.flow.adapter.Notify;
 import com.leaderli.li.flow.constant.PluginConstant;
+import com.leaderli.li.flow.editor.FlowEditor;
 import com.leaderli.li.flow.editor.model.ConnectionNode;
 import com.leaderli.li.flow.editor.model.GotoNode;
 import com.leaderli.li.flow.editor.model.ModelRole;
 import com.leaderli.li.flow.editor.policy.GotoNodeGraphicalNodeEditPolicy;
+import com.leaderli.li.flow.listener.DefaultTypeNotifyListener;
 import com.leaderli.li.flow.util.ExtendedChopboxAnchor;
 import com.leaderli.li.flow.util.ImageUtil;
 
-public class GotoNodeEditPart extends GenericsEditPart<GotoNode> implements NodeEditPart, ModelRole {
+public class GotoNodeEditPart extends GenericsEditPart<GotoNode, FlowEditor> implements NodeEditPart, ModelRole {
 
 	IFigure outputTerminal = null;
 	Label terminalLabel = null;
@@ -62,7 +63,7 @@ public class GotoNodeEditPart extends GenericsEditPart<GotoNode> implements Node
 	@Override
 	protected void refreshVisuals() {
 		// 没有连接线的gotoNode用红色表示
-		if (getModel().getLinkedConnectionNode() == PluginConstant.NO_LINKED_CONNECTION_NODE) {
+		if (getModel().getLinkedConnectionNode() == null) {
 			figure.setForegroundColor(new Color(Display.getDefault(), new RGB(255, 0, 0)));
 		} else {
 			figure.setForegroundColor(new Color(Display.getDefault(), new RGB(0, 0, 0)));
@@ -82,7 +83,7 @@ public class GotoNodeEditPart extends GenericsEditPart<GotoNode> implements Node
 	protected List<ConnectionNode> getModelSourceConnections() {
 		List<ConnectionNode> connectionNodes = ((FlowDiagramEditPart) getParent().getParent()).getModel()
 				.getConnectionNodes();
-		return connectionNodes.stream().filter(connectionNode -> getModel().getId() == connectionNode.getSourceID())
+		return connectionNodes.stream().filter(connectionNode -> getModel() == connectionNode.getSource())
 				.collect(Collectors.toList());
 	}
 
@@ -108,37 +109,37 @@ public class GotoNodeEditPart extends GenericsEditPart<GotoNode> implements Node
 	}
 	@Override
 	protected void initAfterSetModel() {
-		addNotify((typeRole, oldVal, newVal) -> {
+		addNotifyListener(() -> {
 			refreshVisuals();
 			refreshSourceConnections();
 		});
 	}
 
-	private class ConnectionSourceGotoNodeAdapter implements Notify {
+	private class ConnectionSourceGotoNodeAdapter implements DefaultTypeNotifyListener {
 
 		@Override
-		public void notifyChanged(int typeRole, String oldVal, String newVal) {
-			refreshVisuals();
-			refreshSourceConnections();
+		public void notifyChanged() {
 		}
 
 		@Override
 		public int typeAndRole() {
-			return GOTO_TYPE | CONNECTION_SOURCE_ROLE;
+			return GOTO_TYPE | CONNECTION_TARGET_ROLE;
 		}
 
-		private class RenameGotoNodeAdapter implements Notify {
 
-			@Override
-			public void notifyChanged(int typeRole, String oldVal, String newVal) {
-				refreshVisuals();
-			}
 
-			@Override
-			public int typeAndRole() {
-				return GOTO_TYPE | NAME_ROLE;
-			}
+	}
 
+	private class RenameGotoNodeAdapter implements DefaultTypeNotifyListener {
+
+		@Override
+		public void notifyChanged() {
+			refreshVisuals();
+		}
+
+		@Override
+		public int typeAndRole() {
+			return GOTO_TYPE | NAME_ROLE;
 		}
 
 	}

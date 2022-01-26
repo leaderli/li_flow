@@ -2,7 +2,7 @@ $package
 
 import java.util.Map;
 import java.util.HashMap;
-import com.leaderli.li.flow.BaseSubFlow;
+import com.leaderli.li.flow.base.BaseSubFlow;
 
 public class $name  implements BaseSubFlow {
 

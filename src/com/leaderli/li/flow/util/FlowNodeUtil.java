@@ -11,11 +11,10 @@ import com.leaderli.li.flow.editor.model.GotoNode;
 
 public class FlowNodeUtil {
 
-	public static void updateGotoNodeAfterSetFlowName(FlowNode flowNode) {
+	public static void updateGotoNodeAfterSetFlowName(IProject project, FlowNode flowNode) {
 
 		String flowName = flowNode.getFlowName();
 		FlowDiagram flowDiagram = flowNode.getParent();
-		IProject project = flowDiagram.getEditor().getProject();
 
 		flowNode.getGotoNodes().clear();
 

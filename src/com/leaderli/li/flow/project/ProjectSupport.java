@@ -28,18 +28,33 @@ public class ProjectSupport {
 
 			addNature(project);
 			addBuildSpec(project);
-			String[] folders = { "flow", "src", "resource" };
+			String[] folders = { "flow", "src/com/leaderli/li/flow/base", "resource" };
 			addToPrjectStructure(project, folders);
 			
 			addClassPath(project);
-			addDependency(project);
 			addCodeTemplate(project);
+			addBaseCode(project);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			project = null;
 		}
 		return project;
+	}
+
+	private static void addBaseCode(IProject project) throws Exception {
+		addBaseCode(project, "BaseReturn");
+		addBaseCode(project, "BaseServlet");
+		addBaseCode(project, "BaseSubFlow");
+		addBaseCode(project, "Session");
+
+	}
+
+	private static void addBaseCode(IProject project, String name) throws Exception {
+		String from = "resource/" + name + ".java";
+		String to = "src/com/leaderli/li/flow/base/" + name + ".java";
+		ResourcesUtil.copyFileFromPluginToProject(project, from, to);
+
 	}
 
 	private static void addCodeTemplate(IProject project) throws Exception {
@@ -54,11 +69,6 @@ public class ProjectSupport {
 		ResourcesUtil.copyFileFromPluginToProject(project, fromTo, fromTo);
 	}
 
-	private static void addDependency(IProject project) throws Exception {
-		String from = "resource/runner-1.0.jar";
-		String to = "lib/runner-1.0.jar";
-		ResourcesUtil.copyFileFromPluginToProject(project, from, to);
-	}
 
 	private static void addClassPath(IProject project) throws Exception {
 		String from = "resource/new_project_classpath.xml";

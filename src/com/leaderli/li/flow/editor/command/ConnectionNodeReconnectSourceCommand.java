@@ -1,6 +1,5 @@
 package com.leaderli.li.flow.editor.command;
 
-import com.leaderli.li.flow.constant.PluginConstant;
 import com.leaderli.li.flow.editor.model.ConnectionNode;
 import com.leaderli.li.flow.editor.model.FlowDiagram;
 import com.leaderli.li.flow.editor.model.GotoNode;
@@ -15,12 +14,11 @@ public class ConnectionNodeReconnectSourceCommand extends ModelCommand<Connectio
 	public void execute() {
 
 		if (oldSource == null) {
-			oldSource = getModel().getParent().getRegisterNode(getModel().getSourceID());
+			oldSource = getModel().getSource();
 		}
-		getModel().setSourceID(newSource.getId());
-		getModel().setSourceFlowNodeID(newSource.getParent().getId());
-		newSource.setLinkedConnectionNode(getModel().getId());
-		oldSource.setLinkedConnectionNode(PluginConstant.NO_LINKED_CONNECTION_NODE);
+		getModel().setSource(newSource);
+		newSource.setLinkedConnectionNode(getModel());
+		oldSource.setLinkedConnectionNode(null);
 		
 		getModel().notifyChanged();
 		
@@ -28,10 +26,9 @@ public class ConnectionNodeReconnectSourceCommand extends ModelCommand<Connectio
 
 	@Override
 	public void undo() {
-		getModel().setSourceID(oldSource.getId());
-		getModel().setSourceFlowNodeID(oldSource.getParent().getId());
-		oldSource.setLinkedConnectionNode(getModel().getId());
-		newSource.setLinkedConnectionNode(PluginConstant.NO_LINKED_CONNECTION_NODE);
+		getModel().setSource(oldSource);
+		oldSource.setLinkedConnectionNode(getModel());
+		newSource.setLinkedConnectionNode(null);
 
 		getModel().notifyChanged();
 

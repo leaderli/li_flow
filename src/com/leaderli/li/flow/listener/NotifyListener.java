@@ -1,14 +1,15 @@
-package com.leaderli.li.flow.adapter;
+package com.leaderli.li.flow.listener;
 
 import com.leaderli.li.flow.editor.model.ModelRole;
 
-public interface Notify {
+public interface NotifyListener<T> {
 
 
 
 
 
 	default boolean canNotifyForModel(Object model) {
+
 		return true;
 	}
 
@@ -17,7 +18,11 @@ public interface Notify {
 	}
 
 
-	void notifyChanged(int typeRole, String oldVal, String newVal);
+	default void notifyChanged(T oldVal, T newVal) {
+		notifyChanged();
+	}
+
+	void notifyChanged();
 
 }
 

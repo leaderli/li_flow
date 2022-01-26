@@ -43,6 +43,7 @@ public class TestAst2 {
 		URI url = file.toURI();
 		String java = String.join("\n", Files.readAllLines(Paths.get(url)));
 
+		@SuppressWarnings("deprecation")
 		ASTParser astParser = ASTParser.newParser(AST.JLS8);
 		astParser.setSource(java.toCharArray());
 		astParser.setKind(ASTParser.K_COMPILATION_UNIT);
@@ -96,6 +97,7 @@ public class TestAst2 {
 
 
 class DemoVisitor extends ASTVisitor {
+	@SuppressWarnings("deprecation")
 	private static ASTNode createAstNodeWithMethodBody() {
 		String body = "\n" +
 				"		List<Demo> demos = new ArrayList<>();\n" +
