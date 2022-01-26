@@ -3,6 +3,7 @@ package com.leaderli.li.flow.editor.policy;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.editpolicies.AbstractEditPolicy;
 
+import com.leaderli.li.flow.editor.BaseGraphicalEditorWithFlyoutPalette;
 import com.leaderli.li.flow.editor.model.NodeNotify;
 import com.leaderli.li.flow.editor.part.GenericsEditPart;
 
