@@ -53,6 +53,7 @@ public class ResourcesUtil {
 	public static String getPackageSimpleName(String packageName) {
 		return StringUtils.substringAfterLast(packageName, ".");
 	}
+	@SuppressWarnings("deprecation")
 	public static String getFlowNodeSourceCodeTemplate(IProject project, String type) {
 
 		try {
